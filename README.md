@@ -17,7 +17,7 @@ Contents:
 
 ## Current proof scope
 
-The current MVP proves the control-plane mechanics: routing, hot/warm/cold expert cache, cold on-disk expert loading, fallback, and metrics. It does **not yet** prove frontier neural quality or production vLLM/LoRA serving.
+The repo now proves the control-plane mechanics, learned routing, a real local Ollama neural backend, and an Apple Silicon vLLM-Metal/MLX OpenAI-compatible serving path with a loaded LoRA adapter. It is still a bounded proof harness rather than a frontier-quality benchmark suite.
 
 ## Quick start
 
@@ -43,4 +43,19 @@ Optional local neural proof, when Ollama is installed and a model is available:
 rme prove-ollama --model gemma4:e4b --workload workloads/real_world_v1.jsonl --experts experts --output runs/ollama-proof.json --limit 6
 ```
 
-This routes prompts through the same expert control plane, injects the selected expert context into a real local Ollama model, and records accuracy plus p50/p95 latency. It is a real local model proof of routed context use, not yet a LoRA/vLLM adapter proof.
+This routes prompts through the same expert control plane, injects the selected expert context into a real local Ollama model, and records accuracy plus p50/p95 latency.
+
+Apple Silicon vLLM-Metal proof, after installing vLLM-Metal into `~/.venv-vllm-metal` and starting the server:
+
+```bash
+source ~/.venv-vllm-metal/bin/activate
+VLLM_METAL_MEMORY_FRACTION=0.5 VLLM_METAL_USE_PAGED_ATTENTION=1 \
+  vllm serve Qwen/Qwen3-0.6B --host 127.0.0.1 --port 8000 --max-model-len 1024 \
+  --enable-lora --max-loras 2 --lora-modules tldr=phh/Qwen3-0.6B-TLDR-Lora
+
+rme prove-openai --base-url http://127.0.0.1:8000/v1 --model tldr \
+  --workload workloads/real_world_v1.jsonl --experts experts \
+  --output runs/vllm-metal-lora-proof.json --limit 6
+```
+
+This proves the OpenAI-compatible vLLM-Metal/MLX serving path, with a Qwen3 base model and a loaded LoRA adapter exposed as model `tldr`.

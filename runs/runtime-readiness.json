@@ -1,12 +1,13 @@
 {
   "apple_silicon_detected": true,
-  "blocker": "Apple Silicon detected. Production adapter proof should use vLLM-Metal/MLX, but vllm_metal is not importable in the active environment. Install vLLM-Metal, then run the routed adapter proof against MLX-community models/adapters.",
+  "blocker": null,
   "cuda_gpu_detected": false,
-  "mlx_runtime_candidate": false,
+  "mlx_runtime_candidate": true,
   "nvidia_smi_available": false,
   "ollama_available": true,
-  "production_adapter_runtime_ready": false,
+  "production_adapter_runtime_ready": true,
   "sglang_importable": false,
   "vllm_importable": false,
-  "vllm_metal_importable": false
+  "vllm_metal_importable": false,
+  "vllm_metal_venv_importable": true
 }

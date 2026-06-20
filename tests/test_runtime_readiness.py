@@ -6,6 +6,7 @@ def test_runtime_readiness_serializes_mlx_and_cuda_fields():
         ollama_available=True,
         vllm_importable=False,
         vllm_metal_importable=True,
+        vllm_metal_venv_importable=False,
         sglang_importable=False,
         nvidia_smi_available=False,
         cuda_gpu_detected=False,

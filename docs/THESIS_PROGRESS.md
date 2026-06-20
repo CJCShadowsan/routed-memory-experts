@@ -175,3 +175,41 @@ Claims additionally supported:
 Remaining blocker:
 
 - `vllm_metal` is not installed/importable in the active environment. The next proof slice should install/vet vLLM-Metal, start a local vLLM-Metal server with an MLX-community model, and then extend `rme prove-ollama` into a generic OpenAI-compatible routed-serving proof.
+
+## Iteration 7 assessment
+
+Status: Installed vLLM-Metal and proved Apple Silicon vLLM/MLX serving with LoRA loaded.
+
+Closeness to ultimate goal: 70%.
+
+Evidence added:
+
+- Installed vLLM-Metal into `~/.venv-vllm-metal` using upstream installer after inspecting docs and installer behavior.
+- Verified `vllm`, `vllm_metal`, `mlx`, and `openai` are importable in the vLLM-Metal environment.
+- Started a vLLM-Metal OpenAI-compatible server on Apple Silicon using `Qwen/Qwen3-0.6B`.
+- Added generic `rme prove-openai` proof path for OpenAI-compatible servers.
+- Started vLLM-Metal with `--enable-lora` and loaded `phh/Qwen3-0.6B-TLDR-Lora` as served model `tldr`.
+- Recorded served model list in `runs/vllm-metal-models.json`, showing base model `Qwen/Qwen3-0.6B` and LoRA model `tldr` with parent `Qwen/Qwen3-0.6B`.
+- Recorded routed LoRA proof in `runs/vllm-metal-lora-proof.json`.
+
+Observed result:
+
+- Runtime readiness: production adapter runtime ready via Apple Silicon vLLM-Metal/MLX.
+- Base vLLM-Metal routed proof: accuracy 0.8333 on first six workload items, p50 about 238 ms, p95 about 319 ms.
+- LoRA vLLM-Metal routed proof: accuracy 1.0 on first six workload items, p50 about 309 ms, p95 about 327 ms.
+
+Important implementation finding:
+
+- vLLM-Metal LoRA currently does not implement upstream `max_cpu_loras > max_loras` cache-tier behavior. Attempting `--max-cpu-loras 4 --max-loras 2` failed with `NotImplementedError`; setting/omitting `--max-cpu-loras` so it equals `max_loras` allowed the LoRA server to start. This means Apple Silicon proves LoRA serving, but not upstream-style CPU LoRA cache tiering yet.
+
+Claims additionally supported:
+
+- Apple Silicon can run the production-serving proof via vLLM-Metal/MLX without CUDA.
+- The proof harness can exercise an OpenAI-compatible vLLM server.
+- A real LoRA adapter can be loaded and routed through the vLLM-Metal serving path.
+
+Claims still not fully proven:
+
+- Large public benchmark validation.
+- Many simultaneous LoRA/adaptor agents under real concurrency.
+- Hot/warm/cold adapter tiering with `max_cpu_loras > max_loras` on Metal, because vLLM-Metal explicitly does not implement that upstream cache tier yet.

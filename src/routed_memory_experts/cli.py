@@ -6,6 +6,7 @@ import json
 from .fleet import fleet_summary_to_dict, simulate_agent_fleet, write_fleet_summary
 from .learned_router import compare_routers, router_comparison_to_dict
 from .ollama_backend import ollama_summary_to_dict, run_ollama_proof
+from .openai_backend import openai_summary_to_dict, run_openai_compatible_proof
 from .proof import run_proof, summary_to_dict
 from .runtime_readiness import check_runtime_readiness, runtime_readiness_to_dict
 
@@ -36,6 +37,15 @@ def main(argv: list[str] | None = None) -> int:
     ollama.add_argument("--output", default="runs/ollama-proof.json")
     ollama.add_argument("--limit", type=int, default=None)
     ollama.add_argument("--min-accuracy", type=float, default=0.75)
+
+    openai = sub.add_parser("prove-openai", help="run routed expert proof through an OpenAI-compatible server")
+    openai.add_argument("--base-url", default="http://127.0.0.1:8000/v1")
+    openai.add_argument("--model", required=True)
+    openai.add_argument("--workload", required=True)
+    openai.add_argument("--experts", required=True)
+    openai.add_argument("--output", default="runs/openai-proof.json")
+    openai.add_argument("--limit", type=int, default=None)
+    openai.add_argument("--min-accuracy", type=float, default=0.75)
 
     routers = sub.add_parser("compare-routers", help="compare learned router against keyword baseline")
     routers.add_argument("--train", required=True)
@@ -83,6 +93,16 @@ def main(argv: list[str] | None = None) -> int:
             print(f"FAIL: Ollama routed accuracy {summary.accuracy:.3f} < {args.min_accuracy:.3f}")
             return 6
         print("PASS: Ollama routed expert proof met threshold")
+        return 0
+
+    if args.command == "prove-openai":
+        summary = run_openai_compatible_proof(args.workload, args.experts, args.base_url, args.model, args.output, args.limit)
+        data = openai_summary_to_dict(summary)
+        print(json.dumps({k: v for k, v in data.items() if k != "records"}, indent=2, sort_keys=True))
+        if summary.accuracy < args.min_accuracy:
+            print(f"FAIL: OpenAI-compatible routed accuracy {summary.accuracy:.3f} < {args.min_accuracy:.3f}")
+            return 10
+        print("PASS: OpenAI-compatible routed expert proof met threshold")
         return 0
 
     if args.command == "compare-routers":

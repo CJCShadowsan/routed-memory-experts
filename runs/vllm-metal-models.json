@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "created": 1781996746,
+      "id": "Qwen/Qwen3-0.6B",
+      "max_model_len": 1024,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": null,
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1781996746,
+          "group": null,
+          "id": "modelperm-b52794610954fb97",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "Qwen/Qwen3-0.6B"
+    },
+    {
+      "created": 1781996746,
+      "id": "tldr",
+      "max_model_len": null,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": "Qwen/Qwen3-0.6B",
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1781996746,
+          "group": null,
+          "id": "modelperm-b2cde0d12e2e6869",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "phh/Qwen3-0.6B-TLDR-Lora"
+    }
+  ],
+  "object": "list"
+}

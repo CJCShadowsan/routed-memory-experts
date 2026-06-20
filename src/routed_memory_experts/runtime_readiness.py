@@ -15,6 +15,7 @@ class RuntimeReadiness:
     ollama_available: bool
     vllm_importable: bool
     vllm_metal_importable: bool
+    vllm_metal_venv_importable: bool
     sglang_importable: bool
     nvidia_smi_available: bool
     cuda_gpu_detected: bool
@@ -24,10 +25,25 @@ class RuntimeReadiness:
     blocker: str | None
 
 
+def _venv_importable(venv_python: Path, module: str) -> bool:
+    if not venv_python.exists():
+        return False
+    result = subprocess.run(
+        [str(venv_python), "-c", f"import importlib.util; raise SystemExit(0 if importlib.util.find_spec('{module}') else 1)"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    return result.returncode == 0
+
+
 def check_runtime_readiness(output_path: str | Path | None = None) -> RuntimeReadiness:
     ollama_available = shutil.which("ollama") is not None
     vllm_importable = importlib.util.find_spec("vllm") is not None
     vllm_metal_importable = importlib.util.find_spec("vllm_metal") is not None
+    vllm_metal_venv_importable = _venv_importable(Path.home() / ".venv-vllm-metal" / "bin" / "python", "vllm_metal")
     sglang_importable = importlib.util.find_spec("sglang") is not None
     nvidia_smi = shutil.which("nvidia-smi")
     nvidia_smi_available = nvidia_smi is not None
@@ -40,7 +56,7 @@ def check_runtime_readiness(output_path: str | Path | None = None) -> RuntimeRea
             cuda_gpu_detected = False
 
     apple_silicon_detected = sys.platform == "darwin" and platform.machine() == "arm64"
-    mlx_runtime_candidate = apple_silicon_detected and vllm_metal_importable
+    mlx_runtime_candidate = apple_silicon_detected and (vllm_metal_importable or vllm_metal_venv_importable)
     cuda_runtime_candidate = (vllm_importable or sglang_importable) and cuda_gpu_detected
     production_ready = mlx_runtime_candidate or cuda_runtime_candidate
 
@@ -48,8 +64,9 @@ def check_runtime_readiness(output_path: str | Path | None = None) -> RuntimeRea
     if not production_ready:
         if apple_silicon_detected:
             blocker = (
-                "Apple Silicon detected. Production adapter proof should use vLLM-Metal/MLX, but vllm_metal is not importable in the active environment. "
-                "Install vLLM-Metal, then run the routed adapter proof against MLX-community models/adapters."
+                "Apple Silicon detected. Production adapter proof should use vLLM-Metal/MLX, but vllm_metal is not importable "
+                "in the active environment or ~/.venv-vllm-metal. Install vLLM-Metal, then run the routed adapter proof against "
+                "MLX-community models/adapters."
             )
         else:
             blocker = (
@@ -60,6 +77,7 @@ def check_runtime_readiness(output_path: str | Path | None = None) -> RuntimeRea
         ollama_available=ollama_available,
         vllm_importable=vllm_importable,
         vllm_metal_importable=vllm_metal_importable,
+        vllm_metal_venv_importable=vllm_metal_venv_importable,
         sglang_importable=sglang_importable,
         nvidia_smi_available=nvidia_smi_available,
         cuda_gpu_detected=cuda_gpu_detected,
