@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import platform
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -12,9 +14,12 @@ from pathlib import Path
 class RuntimeReadiness:
     ollama_available: bool
     vllm_importable: bool
+    vllm_metal_importable: bool
     sglang_importable: bool
     nvidia_smi_available: bool
     cuda_gpu_detected: bool
+    apple_silicon_detected: bool
+    mlx_runtime_candidate: bool
     production_adapter_runtime_ready: bool
     blocker: str | None
 
@@ -22,6 +27,7 @@ class RuntimeReadiness:
 def check_runtime_readiness(output_path: str | Path | None = None) -> RuntimeReadiness:
     ollama_available = shutil.which("ollama") is not None
     vllm_importable = importlib.util.find_spec("vllm") is not None
+    vllm_metal_importable = importlib.util.find_spec("vllm_metal") is not None
     sglang_importable = importlib.util.find_spec("sglang") is not None
     nvidia_smi = shutil.which("nvidia-smi")
     nvidia_smi_available = nvidia_smi is not None
@@ -32,16 +38,33 @@ def check_runtime_readiness(output_path: str | Path | None = None) -> RuntimeRea
             cuda_gpu_detected = result.returncode == 0 and "GPU" in result.stdout
         except Exception:
             cuda_gpu_detected = False
-    production_ready = (vllm_importable or sglang_importable) and cuda_gpu_detected
+
+    apple_silicon_detected = sys.platform == "darwin" and platform.machine() == "arm64"
+    mlx_runtime_candidate = apple_silicon_detected and vllm_metal_importable
+    cuda_runtime_candidate = (vllm_importable or sglang_importable) and cuda_gpu_detected
+    production_ready = mlx_runtime_candidate or cuda_runtime_candidate
+
     blocker = None
     if not production_ready:
-        blocker = "Production LoRA/vLLM/SGLang proof requires an importable serving runtime and CUDA GPU; current host only proves local Ollama/context-routed backend."
+        if apple_silicon_detected:
+            blocker = (
+                "Apple Silicon detected. Production adapter proof should use vLLM-Metal/MLX, but vllm_metal is not importable in the active environment. "
+                "Install vLLM-Metal, then run the routed adapter proof against MLX-community models/adapters."
+            )
+        else:
+            blocker = (
+                "Production adapter proof requires either vLLM-Metal on Apple Silicon or an importable vLLM/SGLang runtime with CUDA GPU. "
+                "Current host only proves local Ollama/context-routed backend."
+            )
     readiness = RuntimeReadiness(
         ollama_available=ollama_available,
         vllm_importable=vllm_importable,
+        vllm_metal_importable=vllm_metal_importable,
         sglang_importable=sglang_importable,
         nvidia_smi_available=nvidia_smi_available,
         cuda_gpu_detected=cuda_gpu_detected,
+        apple_silicon_detected=apple_silicon_detected,
+        mlx_runtime_candidate=mlx_runtime_candidate,
         production_adapter_runtime_ready=production_ready,
         blocker=blocker,
     )

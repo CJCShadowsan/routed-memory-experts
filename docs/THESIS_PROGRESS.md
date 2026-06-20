@@ -145,13 +145,33 @@ Observed result on current host:
 - CUDA GPU detected: false.
 - Production adapter runtime ready: false.
 
-Blocker:
+Blocker, revised after checking current vLLM documentation:
 
-- Production LoRA/vLLM/SGLang proof requires an importable serving runtime and CUDA GPU. This macOS host can prove the local Ollama/context-routed backend, deterministic cache/routing control plane, learned-router improvement, and fleet-locality simulation, but it cannot honestly prove CUDA-backed vLLM/SGLang adapter serving.
+- CUDA is not the only valid production-serving path. vLLM now documents Apple Silicon GPU acceleration through the community-maintained `vllm-metal` plugin, which uses MLX and Apple's Metal framework. The current blocker on this host is therefore not “no CUDA”; it is that `vllm_metal` is not installed/importable in the active environment yet.
 
 Next required environment to prove remaining claims:
 
-- Linux host with NVIDIA GPU and CUDA.
-- vLLM or SGLang installed.
-- At least one base model and multiple compatible LoRA adapters.
+- Either Apple Silicon with vLLM-Metal/MLX installed, or Linux with NVIDIA GPU/CUDA plus vLLM/SGLang.
+- At least one base model and multiple compatible LoRA/adapters, preferably from MLX-compatible model/adaptor artifacts on Apple Silicon.
 - Benchmark workload large enough to measure p50/p95 latency, adapter load time, cache hit rate, route regret, and quality vs base/fallback.
+
+## Iteration 6 assessment
+
+Status: Corrected runtime readiness model for Apple Silicon.
+
+Closeness to ultimate goal: 47%.
+
+Evidence added:
+
+- Checked upstream vLLM documentation and vLLM-Metal repository metadata.
+- vLLM documents Apple Silicon GPU acceleration through `vllm-metal`, a community-maintained plugin using MLX and Metal.
+- vLLM-Metal repository contains LoRA-related implementation paths under `vllm_metal/v1/lora/` and tests such as `tests/test_lora.py`.
+- Runtime readiness now distinguishes CUDA vLLM/SGLang from Apple Silicon vLLM-Metal/MLX.
+
+Claims additionally supported:
+
+- The production adapter proof may be achievable on this Apple Silicon host through vLLM-Metal rather than requiring a CUDA machine.
+
+Remaining blocker:
+
+- `vllm_metal` is not installed/importable in the active environment. The next proof slice should install/vet vLLM-Metal, start a local vLLM-Metal server with an MLX-community model, and then extend `rme prove-ollama` into a generic OpenAI-compatible routed-serving proof.
