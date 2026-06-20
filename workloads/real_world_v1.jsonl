@@ -1,0 +1,12 @@
+{"id": "k8s-helm-1", "domain": "kubernetes", "prompt": "For a Kubernetes Helm chart, how should I prove rendered manifests and chart assertions?", "expected_contains": ["helm template", "helm unittest"]}
+{"id": "k8s-deploy-1", "domain": "kubernetes", "prompt": "When validating a Kubernetes deployment, what readiness signal is stronger than object existence?", "expected_contains": ["availablereplicas", "observedgeneration"]}
+{"id": "py-pytest-1", "domain": "python", "prompt": "In Python, how should I use pytest in a TDD loop?", "expected_contains": ["pytest", "failure"]}
+{"id": "py-decorator-1", "domain": "python", "prompt": "What should a Python decorator use to preserve wrapped function metadata?", "expected_contains": ["functools.wraps"]}
+{"id": "fin-npv-1", "domain": "finance", "prompt": "Explain NPV for a discounted cash flow investment decision.", "expected_contains": ["discounts", "cash flow", "initial investment"]}
+{"id": "fin-wacc-1", "domain": "finance", "prompt": "What does WACC combine in corporate finance?", "expected_contains": ["equity", "debt", "capital structure"]}
+{"id": "med-rct-1", "domain": "medical-literature", "prompt": "What makes a randomized clinical trial useful for causal evidence?", "expected_contains": ["randomized", "confounding", "chance"]}
+{"id": "med-ci-1", "domain": "medical-literature", "prompt": "How should I interpret a confidence interval in a systematic review?", "expected_contains": ["uncertainty", "effect size"]}
+{"id": "sec-xss-1", "domain": "security", "prompt": "What mitigations reduce XSS risk in a web application?", "expected_contains": ["encoding", "csp", "html"]}
+{"id": "sec-csrf-1", "domain": "security", "prompt": "What are common CSRF defenses?", "expected_contains": ["samesite", "csrf tokens", "origin"]}
+{"id": "gen-1", "domain": "general", "prompt": "What should happen when no specialist domain is obvious?", "expected_contains": ["specialist"]}
+{"id": "k8s-pod-1", "domain": "kubernetes", "prompt": "How do I debug a pod that is not becoming ready?", "expected_contains": ["events", "logs", "readiness probes"]}

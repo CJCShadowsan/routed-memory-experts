@@ -1,0 +1,8 @@
+{
+  "name": "generalist-baseline",
+  "domain": "general",
+  "facts": {
+    "capital": "I can answer broad factual questions, but I do not expose specialized operational detail."
+  },
+  "default_response": "Generalist answer: route to a specialist when the task requires precise domain procedure."
+}

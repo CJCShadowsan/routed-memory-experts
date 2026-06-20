@@ -1,0 +1,10 @@
+{
+  "name": "medical-literature-expert",
+  "domain": "medical-literature",
+  "facts": {
+    "randomized": "A randomized trial reduces confounding by assigning interventions by chance and should report allocation, blinding, endpoints, and adverse events.",
+    "cohort": "A cohort study follows exposed and unexposed groups over time and estimates associations such as risk ratios or hazard ratios.",
+    "confidence interval": "A confidence interval describes estimation uncertainty and should be interpreted with study design and effect size."
+  },
+  "default_response": "Medical literature expert: separate study design, population, endpoint, effect size, and limitations."
+}

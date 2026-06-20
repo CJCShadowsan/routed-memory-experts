@@ -1,0 +1,10 @@
+{
+  "agent_count": 1000,
+  "cold_loads": 340,
+  "hit_rate": 0.932,
+  "hot_capacity": 128,
+  "hot_hits": 4660,
+  "p95_loads_per_request": 1.0,
+  "request_count": 5000,
+  "unique_agents_touched": 340
+}

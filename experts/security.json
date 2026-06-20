@@ -1,0 +1,10 @@
+{
+  "name": "security-expert",
+  "domain": "security",
+  "facts": {
+    "xss": "XSS risk is reduced with contextual output encoding, CSP, trusted sanitizers, and avoiding unsafe HTML sinks.",
+    "csrf": "CSRF defenses include SameSite cookies, CSRF tokens, origin checks, and avoiding state changes on GET.",
+    "sql injection": "SQL injection is prevented with parameterized queries and avoiding string concatenation for SQL commands."
+  },
+  "default_response": "Security expert: model trust boundaries, input validation, exploitability, and mitigations."
+}

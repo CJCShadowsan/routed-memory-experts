@@ -1,0 +1,10 @@
+{
+  "name": "finance-expert",
+  "domain": "finance",
+  "facts": {
+    "npv": "NPV discounts each future cash flow by the required return and subtracts the initial investment.",
+    "wacc": "WACC blends cost of equity and after-tax cost of debt according to capital structure weights.",
+    "terminal value": "Terminal value captures cash flows beyond the explicit forecast, commonly via Gordon growth or exit multiple."
+  },
+  "default_response": "Finance expert: identify cash flows, discount rate, time horizon, and sensitivity assumptions."
+}

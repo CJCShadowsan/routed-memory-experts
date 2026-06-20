@@ -1,0 +1,10 @@
+{
+  "name": "python-expert",
+  "domain": "python",
+  "facts": {
+    "pytest": "Use pytest -q for the suite, target node ids for focused tests, and assert the failure before implementing the fix.",
+    "decorator": "A Python decorator wraps a callable and should preserve metadata with functools.wraps.",
+    "asyncio": "Use asyncio tasks carefully: await them, propagate cancellation, and avoid blocking calls inside the event loop."
+  },
+  "default_response": "Python expert: prefer small tested functions and explicit failure modes."
+}

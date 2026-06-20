@@ -1,0 +1,10 @@
+{
+  "name": "kubernetes-expert",
+  "domain": "kubernetes",
+  "facts": {
+    "helm": "Use helm template to render charts, then helm unittest for chart assertions, and kubectl apply --server-side --force-conflicts for large CRDs when required.",
+    "deployment": "A Kubernetes Deployment should be checked with availableReplicas and observedGeneration, not only object existence.",
+    "pod": "Debug pods by checking events, logs, image pull state, readiness probes, and node scheduling constraints."
+  },
+  "default_response": "Kubernetes expert: verify rendered manifests, readiness conditions, and cluster events."
+}
