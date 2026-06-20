@@ -27,6 +27,7 @@ uv venv --python 3.11
 uv pip install -e '.[dev]'
 pytest -q
 rme prove --workload workloads/real_world_v1.jsonl --experts experts --output runs/proof.json
+rme compare-routers --train workloads/router_train_v1.jsonl --dev workloads/router_dev_v1.jsonl --output runs/router-comparison.json
 ```
 
 Success criteria for Phase 1:
@@ -35,3 +36,11 @@ Success criteria for Phase 1:
 - route regret <= 0.20
 - routed accuracy > generalist baseline
 - proof JSON records cold loads and hot/warm cache behavior
+
+Optional local neural proof, when Ollama is installed and a model is available:
+
+```bash
+rme prove-ollama --model gemma4:e4b --workload workloads/real_world_v1.jsonl --experts experts --output runs/ollama-proof.json --limit 6
+```
+
+This routes prompts through the same expert control plane, injects the selected expert context into a real local Ollama model, and records accuracy plus p50/p95 latency. It is a real local model proof of routed context use, not yet a LoRA/vLLM adapter proof.

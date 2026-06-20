@@ -1,0 +1,56 @@
+{
+  "dev_count": 5,
+  "keyword_accuracy": 0.0,
+  "keyword_correct": 0,
+  "learned_accuracy": 1.0,
+  "learned_beats_keyword": true,
+  "learned_correct": 5,
+  "records": [
+    {
+      "id": "dev-k8s-chart",
+      "keyword_correct": false,
+      "keyword_domain": "general",
+      "learned_confidence": 0.6092544967426662,
+      "learned_correct": true,
+      "learned_domain": "kubernetes",
+      "oracle_domain": "kubernetes"
+    },
+    {
+      "id": "dev-py-fixture",
+      "keyword_correct": false,
+      "keyword_domain": "general",
+      "learned_confidence": 0.6722007953912155,
+      "learned_correct": true,
+      "learned_domain": "python",
+      "oracle_domain": "python"
+    },
+    {
+      "id": "dev-fin-valuation",
+      "keyword_correct": false,
+      "keyword_domain": "general",
+      "learned_confidence": 0.6938587156846356,
+      "learned_correct": true,
+      "learned_domain": "finance",
+      "oracle_domain": "finance"
+    },
+    {
+      "id": "dev-med-allocation",
+      "keyword_correct": false,
+      "keyword_domain": "general",
+      "learned_confidence": 0.752080352764559,
+      "learned_correct": true,
+      "learned_domain": "medical-literature",
+      "oracle_domain": "medical-literature"
+    },
+    {
+      "id": "dev-sec-sanitize",
+      "keyword_correct": false,
+      "keyword_domain": "general",
+      "learned_confidence": 0.6386294361119887,
+      "learned_correct": true,
+      "learned_domain": "security",
+      "oracle_domain": "security"
+    }
+  ],
+  "train_count": 15
+}

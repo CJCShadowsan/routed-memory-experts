@@ -1,0 +1,5 @@
+{"id": "dev-k8s-chart", "domain": "kubernetes", "prompt": "chart assertions should validate rendered service objects", "expected_contains": ["helm"]}
+{"id": "dev-py-fixture", "domain": "python", "prompt": "fixture driven unit checks need a test runner", "expected_contains": ["pytest"]}
+{"id": "dev-fin-valuation", "domain": "finance", "prompt": "valuation should discount projected money", "expected_contains": ["NPV"]}
+{"id": "dev-med-allocation", "domain": "medical-literature", "prompt": "trial allocation by chance reduces bias", "expected_contains": ["randomized"]}
+{"id": "dev-sec-sanitize", "domain": "security", "prompt": "sanitize browser script sinks in templates", "expected_contains": ["XSS"]}

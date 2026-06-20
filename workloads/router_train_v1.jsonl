@@ -1,0 +1,15 @@
+{"id": "train-kubernetes-0", "domain": "kubernetes", "prompt": "chart renders service account templates", "expected_contains": ["helm template"]}
+{"id": "train-kubernetes-1", "domain": "kubernetes", "prompt": "cluster rollout health checks", "expected_contains": ["availableReplicas"]}
+{"id": "train-kubernetes-2", "domain": "kubernetes", "prompt": "container stuck waiting events", "expected_contains": ["logs"]}
+{"id": "train-python-0", "domain": "python", "prompt": "fixture based unit checks", "expected_contains": ["pytest"]}
+{"id": "train-python-1", "domain": "python", "prompt": "wrapper preserves docstring", "expected_contains": ["functools.wraps"]}
+{"id": "train-python-2", "domain": "python", "prompt": "coroutine scheduler cancellation", "expected_contains": ["asyncio"]}
+{"id": "train-finance-0", "domain": "finance", "prompt": "valuation discounts projected money", "expected_contains": ["NPV"]}
+{"id": "train-finance-1", "domain": "finance", "prompt": "weighted capital hurdle rate", "expected_contains": ["WACC"]}
+{"id": "train-finance-2", "domain": "finance", "prompt": "exit multiple beyond forecast", "expected_contains": ["terminal value"]}
+{"id": "train-medical-literature-0", "domain": "medical-literature", "prompt": "allocation by chance in trial", "expected_contains": ["randomized"]}
+{"id": "train-medical-literature-1", "domain": "medical-literature", "prompt": "observational follow up population", "expected_contains": ["cohort"]}
+{"id": "train-medical-literature-2", "domain": "medical-literature", "prompt": "uncertainty range around effect", "expected_contains": ["confidence interval"]}
+{"id": "train-security-0", "domain": "security", "prompt": "sanitize browser script sink", "expected_contains": ["XSS"]}
+{"id": "train-security-1", "domain": "security", "prompt": "cross site form submission token", "expected_contains": ["CSRF"]}
+{"id": "train-security-2", "domain": "security", "prompt": "database command concatenation exploit", "expected_contains": ["SQL injection"]}

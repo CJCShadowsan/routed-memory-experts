@@ -1,0 +1,64 @@
+{
+  "accuracy": 0.8333333333333334,
+  "correct_count": 5,
+  "model": "gemma4:e4b",
+  "p50_latency_ms": 6041.003708029166,
+  "p95_latency_ms": 6856.972625013441,
+  "records": [
+    {
+      "correct": true,
+      "expert_name": "kubernetes-expert",
+      "item_id": "k8s-helm-1",
+      "latency_ms": 6856.972625013441,
+      "oracle_domain": "kubernetes",
+      "response": "To prove rendered manifests, use `helm template`. For comprehensive chart assertions and testing, you should follow up by running `helm template | helm unittest`.",
+      "routed_domain": "kubernetes"
+    },
+    {
+      "correct": true,
+      "expert_name": "kubernetes-expert",
+      "item_id": "k8s-deploy-1",
+      "latency_ms": 6041.003708029166,
+      "oracle_domain": "kubernetes",
+      "response": "A stronger readiness signal involves checking operational metrics rather than just object existence. You should validate a Kubernetes Deployment by observing both `availablereplicas` and `observedgeneration` to confirm that the desired state has been successfully achieved.",
+      "routed_domain": "kubernetes"
+    },
+    {
+      "correct": true,
+      "expert_name": "python-expert",
+      "item_id": "py-pytest-1",
+      "latency_ms": 10045.508542098105,
+      "oracle_domain": "python",
+      "response": "Start by writing a test that defines the desired behavior but is expected to cause a failure; running `pytest` confirms this initial failure state, which is the \"Red\" phase of TDD. Next, implement only the minimum code necessary to make the test pass, then repeat this cycle until all functionality is covered and passing with `pytest`.",
+      "routed_domain": "python"
+    },
+    {
+      "correct": true,
+      "expert_name": "python-expert",
+      "item_id": "py-decorator-1",
+      "latency_ms": 3905.5609998758882,
+      "oracle_domain": "python",
+      "response": "A Python decorator should use `functools.wraps` to correctly wrap a callable and preserve its original metadata, such as function name and docstrings. This ensures that introspection tools and debugging mechanisms treat the decorated function as if it were the original function.",
+      "routed_domain": "python"
+    },
+    {
+      "correct": false,
+      "expert_name": "finance-expert",
+      "item_id": "fin-npv-1",
+      "latency_ms": 6660.86758300662,
+      "oracle_domain": "finance",
+      "response": "NPV determines the profitability of an investment by discounting each future cash flow using a required return and subtracting the initial investment. This calculation provides a single present value figure to assess whether the project's expected returns justify its upfront cost.",
+      "routed_domain": "finance"
+    },
+    {
+      "correct": true,
+      "expert_name": "finance-expert",
+      "item_id": "fin-wacc-1",
+      "latency_ms": 5782.850792165846,
+      "oracle_domain": "finance",
+      "response": "WACC blends the cost of equity and the after-tax cost of debt. This calculation uses the relative proportions of these sources, which are defined by the firm's capital structure.",
+      "routed_domain": "finance"
+    }
+  ],
+  "workload_count": 6
+}

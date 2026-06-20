@@ -61,3 +61,65 @@ Claims still not proven:
 - Real agent-owned neural models can maintain comparable locality under production traffic.
 - Cache locality remains high under adversarial or uniformly random routing.
 - Model memory pressure, batching fragmentation, and p95 latency are acceptable with real runtimes.
+
+## Iteration 3 assessment
+
+Status: Added real local Ollama model proof path.
+
+Closeness to ultimate goal: 35%.
+
+Evidence added:
+
+- New `rme prove-ollama` command routes workload items through the expert control plane and then asks a real local Ollama model to answer using the selected specialist context.
+- Verified on local model `gemma4:e4b` for the first six workload items.
+- Proof artifact written to `runs/ollama-proof.json`.
+
+Observed result:
+
+- Workload count: 6.
+- Correct count: 5.
+- Accuracy: 0.8333.
+- p50 latency: about 6095 ms.
+- p95 latency: about 6988 ms.
+
+Claims additionally supported:
+
+- A real local neural model can consume routed specialist context and pass a bounded workload threshold.
+- The deterministic control plane can front a real model backend without changing the workload/proof interface.
+
+Claims still not proven:
+
+- LoRA/adapters through vLLM/SGLang outperform a base model.
+- The neural proof currently uses context injection, not adapter weights or separate hot models.
+- Latency is high and not yet optimized for production serving.
+
+## Iteration 4 assessment
+
+Status: Added learned-router comparison.
+
+Closeness to ultimate goal: 42%.
+
+Evidence added:
+
+- New Naive Bayes router trained from labeled workload examples.
+- New synonym-heavy router train/dev workloads.
+- New `rme compare-routers` command writes `runs/router-comparison.json`.
+- Tests prove the learned router can beat the keyword router on held-out synonym prompts.
+
+Observed result:
+
+- Train count: 15.
+- Dev count: 5.
+- Keyword router accuracy: 0.0.
+- Learned router accuracy: 1.0.
+- Learned router beat keyword baseline: true.
+
+Claims additionally supported:
+
+- Router learning can improve route selection over fixed keyword rules when prompts use domain synonyms.
+
+Claims still not proven:
+
+- Learned routing has not yet been validated on a large public benchmark.
+- Learned routing has not yet been connected to real adapter/model load balancing.
+- vLLM/SGLang adapter proof remains the largest unproven claim.

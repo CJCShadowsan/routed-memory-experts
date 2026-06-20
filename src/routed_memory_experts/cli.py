@@ -4,6 +4,8 @@ import argparse
 import json
 
 from .fleet import fleet_summary_to_dict, simulate_agent_fleet, write_fleet_summary
+from .learned_router import compare_routers, router_comparison_to_dict
+from .ollama_backend import ollama_summary_to_dict, run_ollama_proof
 from .proof import run_proof, summary_to_dict
 
 
@@ -25,6 +27,20 @@ def main(argv: list[str] | None = None) -> int:
     fleet.add_argument("--locality-window", type=int, default=64)
     fleet.add_argument("--min-hit-rate", type=float, default=0.85)
     fleet.add_argument("--output", default="runs/fleet.json")
+
+    ollama = sub.add_parser("prove-ollama", help="run routed expert proof through a real local Ollama model")
+    ollama.add_argument("--model", required=True)
+    ollama.add_argument("--workload", required=True)
+    ollama.add_argument("--experts", required=True)
+    ollama.add_argument("--output", default="runs/ollama-proof.json")
+    ollama.add_argument("--limit", type=int, default=None)
+    ollama.add_argument("--min-accuracy", type=float, default=0.75)
+
+    routers = sub.add_parser("compare-routers", help="compare learned router against keyword baseline")
+    routers.add_argument("--train", required=True)
+    routers.add_argument("--dev", required=True)
+    routers.add_argument("--output", default="runs/router-comparison.json")
+    routers.add_argument("--min-learned-accuracy", type=float, default=0.80)
 
     args = parser.parse_args(argv)
 
@@ -53,6 +69,29 @@ def main(argv: list[str] | None = None) -> int:
             print(f"FAIL: fleet hit rate {summary.hit_rate:.3f} < {args.min_hit_rate:.3f}")
             return 5
         print("PASS: fleet simulation met locality/cache threshold")
+        return 0
+
+    if args.command == "prove-ollama":
+        summary = run_ollama_proof(args.workload, args.experts, args.model, args.output, args.limit)
+        data = ollama_summary_to_dict(summary)
+        print(json.dumps({k: v for k, v in data.items() if k != "records"}, indent=2, sort_keys=True))
+        if summary.accuracy < args.min_accuracy:
+            print(f"FAIL: Ollama routed accuracy {summary.accuracy:.3f} < {args.min_accuracy:.3f}")
+            return 6
+        print("PASS: Ollama routed expert proof met threshold")
+        return 0
+
+    if args.command == "compare-routers":
+        summary = compare_routers(args.train, args.dev, args.output)
+        data = router_comparison_to_dict(summary)
+        print(json.dumps(data, indent=2, sort_keys=True))
+        if summary.learned_accuracy < args.min_learned_accuracy:
+            print(f"FAIL: learned router accuracy {summary.learned_accuracy:.3f} < {args.min_learned_accuracy:.3f}")
+            return 7
+        if not summary.learned_beats_keyword:
+            print("FAIL: learned router did not beat keyword router")
+            return 8
+        print("PASS: learned router beat keyword baseline")
         return 0
 
     return 1
