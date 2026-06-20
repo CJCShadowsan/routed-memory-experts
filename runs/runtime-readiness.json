@@ -1,0 +1,9 @@
+{
+  "blocker": "Production LoRA/vLLM/SGLang proof requires an importable serving runtime and CUDA GPU; current host only proves local Ollama/context-routed backend.",
+  "cuda_gpu_detected": false,
+  "nvidia_smi_available": false,
+  "ollama_available": true,
+  "production_adapter_runtime_ready": false,
+  "sglang_importable": false,
+  "vllm_importable": false
+}

@@ -7,6 +7,7 @@ from .fleet import fleet_summary_to_dict, simulate_agent_fleet, write_fleet_summ
 from .learned_router import compare_routers, router_comparison_to_dict
 from .ollama_backend import ollama_summary_to_dict, run_ollama_proof
 from .proof import run_proof, summary_to_dict
+from .runtime_readiness import check_runtime_readiness, runtime_readiness_to_dict
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -41,6 +42,9 @@ def main(argv: list[str] | None = None) -> int:
     routers.add_argument("--dev", required=True)
     routers.add_argument("--output", default="runs/router-comparison.json")
     routers.add_argument("--min-learned-accuracy", type=float, default=0.80)
+
+    runtime = sub.add_parser("check-runtimes", help="check local serving runtime readiness")
+    runtime.add_argument("--output", default="runs/runtime-readiness.json")
 
     args = parser.parse_args(argv)
 
@@ -92,6 +96,16 @@ def main(argv: list[str] | None = None) -> int:
             print("FAIL: learned router did not beat keyword router")
             return 8
         print("PASS: learned router beat keyword baseline")
+        return 0
+
+    if args.command == "check-runtimes":
+        readiness = check_runtime_readiness(args.output)
+        data = runtime_readiness_to_dict(readiness)
+        print(json.dumps(data, indent=2, sort_keys=True))
+        if not readiness.production_adapter_runtime_ready:
+            print("BLOCKED: production adapter runtime is not ready on this host")
+            return 9
+        print("PASS: production adapter runtime is ready")
         return 0
 
     return 1

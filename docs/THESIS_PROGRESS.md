@@ -123,3 +123,35 @@ Claims still not proven:
 - Learned routing has not yet been validated on a large public benchmark.
 - Learned routing has not yet been connected to real adapter/model load balancing.
 - vLLM/SGLang adapter proof remains the largest unproven claim.
+
+## Iteration 5 assessment
+
+Status: Added serving-runtime readiness gate and hit a real blocker.
+
+Closeness to ultimate goal: 45%.
+
+Evidence added:
+
+- New `rme check-runtimes` command checks for Ollama, vLLM, SGLang, `nvidia-smi`, and CUDA GPU readiness.
+- Proof artifact written to `runs/runtime-readiness.json`.
+- Test coverage for serializing runtime readiness/blocker state.
+
+Observed result on current host:
+
+- Ollama available: true.
+- vLLM importable: false.
+- SGLang importable: false.
+- `nvidia-smi` available: false.
+- CUDA GPU detected: false.
+- Production adapter runtime ready: false.
+
+Blocker:
+
+- Production LoRA/vLLM/SGLang proof requires an importable serving runtime and CUDA GPU. This macOS host can prove the local Ollama/context-routed backend, deterministic cache/routing control plane, learned-router improvement, and fleet-locality simulation, but it cannot honestly prove CUDA-backed vLLM/SGLang adapter serving.
+
+Next required environment to prove remaining claims:
+
+- Linux host with NVIDIA GPU and CUDA.
+- vLLM or SGLang installed.
+- At least one base model and multiple compatible LoRA adapters.
+- Benchmark workload large enough to measure p50/p95 latency, adapter load time, cache hit rate, route regret, and quality vs base/fallback.
