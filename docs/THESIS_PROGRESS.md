@@ -2,7 +2,7 @@
 
 ## Ultimate goal
 
-Fully prove or falsify the paper’s narrowed thesis: routed memory-hierarchy expert systems can improve quality/cost tradeoffs by combining resident base capability, focused experts/adapters, learned routing, thousands of agent-owned hot models where useful, and hot/warm/cold storage tiers.
+Fully prove or falsify the paper’s narrowed thesis: routed memory-hierarchy expert systems can improve quality/cost tradeoffs by combining resident base capability, focused experts/adapters, learned routing, thousands of agent-owned hot models where useful, and hot/warm/cold storage tiers. A related infrastructure corollary is now tracked explicitly: if useful requests exhibit locality and route to small experts, deployments may be able to distribute work across many smaller, lower-power accelerators instead of relying exclusively on large centralized GPU clusters.
 
 ## Iteration 1 assessment
 
@@ -349,3 +349,24 @@ Claims still not fully proven:
 
 - Adapter quality superiority is still unproven and currently falsified for the tested Qwen2.5 GSM8K LoRA on the 32-item local run.
 - CUDA public benchmark and production-scale concurrency still need the Kaggle/CUDA script output.
+
+## Iteration 12 assessment
+
+Status: Added infrastructure-distribution implication to the paper thesis.
+
+Closeness to ultimate goal: unchanged for executable proof; paper framing improved.
+
+Rationale added:
+
+- The routed memory-hierarchy thesis is not only about moving adapters between hot/warm/cold memory tiers on one host. It also implies an infrastructure placement strategy: many small experts can potentially run on many smaller, more power-efficient accelerators distributed across tenants, regions, edge sites, or a grid-like cluster.
+- This may reduce the need for a single massive infrastructure buildout when workload locality is strong: hot experts stay near the cohorts that use them, while misses, escalations, and high-complexity requests route to larger shared systems.
+- The same benefit can fail if routing errors, cold-load latency, network transfer, weaker batching, operational overhead, or poor utilization dominate.
+
+Evidence currently relevant:
+
+- `runs/fleet.json` supports the locality precondition for 1,000 routable agent-owned experts under a locality-aware simulated request stream.
+- CUDA T4 artifacts show small-GPU routed serving is mechanically feasible for bounded LoRA workloads.
+
+Claims still not proven:
+
+- No end-to-end cost/power superiority claim is proven. A valid infrastructure claim needs a benchmark comparing centralized large-GPU serving against distributed smaller-accelerator serving on the same workload, including watts, utilization, capital cost per successful request, network transfer, p50/p95 latency, error rate, and escalation rate.

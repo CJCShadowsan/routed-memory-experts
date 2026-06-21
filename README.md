@@ -1,6 +1,6 @@
 # Routed Memory Experts
 
-Proof-oriented research and implementation of a routed memory-hierarchy AI thesis: resident base capability, thousands of routable focused experts/agents, and hot/warm/cold model tiers spanning accelerator memory, DRAM, and NVMe/SSD.
+Proof-oriented research and implementation of a routed memory-hierarchy AI thesis: resident base capability, thousands of routable focused experts/agents, and hot/warm/cold model tiers spanning accelerator memory, DRAM, and NVMe/SSD. The paper now also tracks an infrastructure corollary: routed small experts may allow some deployments to scale across many smaller, lower-power accelerators rather than requiring a single large centralized GPU buildout, but that cost/power claim remains unproven until measured with hardware, power, utilization, and network telemetry.
 
 The project treats the thesis as falsifiable engineering work. Every supported claim should have a machine-readable artifact under `runs/`; every unsupported claim should be recorded as a blocker or limitation.
 
@@ -36,6 +36,8 @@ The repo now proves:
 - CUDA vLLM LoRA serving on Kaggle T4 with `max_cpu_loras > max_loras`;
 - artifact validation for proof JSONs;
 - optional live base-vs-LoRA and concurrency benchmarks when a vLLM-Metal server is running.
+
+The repo currently treats distributed small-accelerator economics as a hypothesis, not a proven result. Relevant early evidence is `runs/fleet.json` for locality and the bounded Kaggle T4 artifacts for small-GPU serving mechanics; a real cost claim still needs a centralized-vs-distributed benchmark with watts, utilization, network transfer, latency, and cost per successful request.
 
 It does **not** yet prove upstream-style vLLM-Metal CPU LoRA cache tiering with `max_cpu_loras > max_loras`; the current Metal runtime explicitly rejects that mode. The analogous upstream CUDA vLLM configuration is proven in the bounded Kaggle artifacts under `runs/cuda-vllm-*.json`.
 

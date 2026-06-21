@@ -6,7 +6,7 @@
 
 ## Abstract
 
-Interactive AI serving is often described as a contest between ever-larger monolithic models and smaller specialized systems. This paper studies a narrower and falsifiable thesis: useful specialization is more likely to emerge from routed memory-hierarchy expert systems than from per-token streaming of arbitrary dense model weights from SSD. In this architecture, a resident base model provides general competence, small experts such as LoRA adapters or prompt/tool/retrieval specialists provide local specialization, and a router selects the appropriate expert at request, session, document, or tool-call granularity. Hot, warm, and cold tiers correspond to accelerator memory, host memory, and local NVMe/object storage, but the routing granularity must be coarse enough that cold movement does not occur on every generated token.
+Interactive AI serving is often described as a contest between ever-larger monolithic models and smaller specialized systems. This paper studies a narrower and falsifiable thesis: useful specialization is more likely to emerge from routed memory-hierarchy expert systems than from per-token streaming of arbitrary dense model weights from SSD. In this architecture, a resident base model provides general competence, small experts such as LoRA adapters or prompt/tool/retrieval specialists provide local specialization, and a router selects the appropriate expert at request, session, document, or tool-call granularity. Hot, warm, and cold tiers correspond to accelerator memory, host memory, and local NVMe/object storage, but the routing granularity must be coarse enough that cold movement does not occur on every generated token. A further implication is infrastructural: if useful work can be decomposed across many small routed experts, then some deployments may scale across grids of smaller, lower-power accelerators instead of requiring a single large cluster of frontier-class GPUs.
 
 We implement a proof-oriented repository that measures this architecture through deterministic control-plane tests, locality simulation for 1,000 agent-owned experts, a learned-router comparison, local neural context-injection through Ollama, Apple Silicon vLLM-Metal/MLX serving, and hosted CUDA vLLM serving on Kaggle T4. The strongest systems result is that CUDA vLLM served a Qwen3-0.6B base model with two LoRA adapters while accepting `--max-loras 2 --max-cpu-loras 4`, the upstream-style CPU LoRA cache-tier configuration that vLLM-Metal currently rejects. On six routed workload items, both CUDA LoRA adapters achieved 1.0 accuracy; a 24-request concurrency run achieved 24/24 successful requests, 0 errors, 0.9167 accuracy, and 0.653 requests/s. The principal remaining unproven claims are large public-benchmark validation, production-scale concurrency, and demonstrating quality superiority of high-quality domain adapters rather than merely proving serving mechanics.
 
@@ -20,7 +20,7 @@ The intuitive appeal of “micro-models streamed from SSD” is clear: local sto
 
 This paper refines the idea into a routed memory-hierarchy architecture. The unit of movement is not an arbitrary dense model per token. The practical units are smaller and coarser: LoRA/adapters, retrieval indexes, tools, prompt specialists, small local models, and session-level agent state. The router selects one or more experts before or during a request; the serving layer keeps frequently used experts hot; and the evaluation layer records route regret, accuracy, fallback, cache behavior, and latency.
 
-The contribution is not a claim that this repository has solved production multi-adapter serving. Instead, it provides a falsifiable implementation path and an evidence ledger. Each claim is backed by an executable artifact where possible, and unproven claims are explicitly listed as blockers.
+The contribution is not a claim that this repository has solved production multi-adapter serving or proved a complete cost model for distributed inference. Instead, it provides a falsifiable implementation path and an evidence ledger. Each claim is backed by an executable artifact where possible, and unproven claims are explicitly listed as blockers.
 
 ## 2. Background and Motivation
 
@@ -44,9 +44,15 @@ Not every specialization should be encoded in weights. Retrieval indexes and too
 
 The repository initially treated CUDA vLLM/SGLang as the only production-grade adapter serving path. That was too narrow. vLLM now has a community-maintained Apple Silicon path through vLLM-Metal, which uses MLX and Metal. This enables local OpenAI-compatible serving on the hardware used for the present study. The important caveat is that feature parity with upstream CUDA vLLM is not complete; in particular, the current vLLM-Metal LoRA manager does not implement the upstream `max_cpu_loras > max_loras` cache tier.
 
+### 2.6 Infrastructure distribution and smaller accelerators
+
+The memory-hierarchy framing also changes the infrastructure question. A monolithic frontier model tends to imply centralized clusters, high-end accelerators, dense networking, and large power/cooling envelopes. A routed expert system suggests a different scaling surface: many smaller models, adapters, retrieval shards, or tool specialists can be placed near the requests or tenants that use them most. In a grid-like environment of many smaller GPUs or neural accelerators, the scheduler can keep local hot experts resident on inexpensive, lower-power cards while routing only misses, escalations, or high-complexity requests to larger shared systems.
+
+This is not automatically cheaper. Routing errors, underutilized shards, cold-load latency, inter-node transfer, operational complexity, and weaker batching can erase the benefit. However, the architecture makes a cost/power hypothesis testable: compare a centralized large-GPU serving stack against a distributed routed stack on the same workload, measuring accuracy, p50/p95 latency, throughput per watt, accelerator utilization, cold-load rate, network transfer, and capital cost per successful request. The current repository contains only early evidence for the locality precondition (`runs/fleet.json`) and bounded small-GPU serving on Kaggle T4; it does not yet prove an end-to-end infrastructure cost advantage.
+
 ## 3. Thesis and Falsifiable Claims
 
-The thesis is that AI serving can be framed as a routed memory-hierarchy problem. A resident base model and a set of smaller specialists can improve quality/cost tradeoffs when the router selects the right specialist at coarse granularity and the serving runtime manages hot/warm/cold tiers without destroying latency or batching efficiency.
+The thesis is that AI serving can be framed as a routed memory-hierarchy problem. A resident base model and a set of smaller specialists can improve quality/cost tradeoffs when the router selects the right specialist at coarse granularity and the serving runtime manages hot/warm/cold tiers without destroying latency or batching efficiency. The infrastructure corollary is that some workloads may be served more economically by distributing many small hot experts across power-efficient accelerators than by centralizing all inference behind a small number of very large accelerators. This corollary is conditional on workload locality, routing accuracy, acceptable tail latency, and high enough utilization of the distributed devices.
 
 | Claim | Current status | Evidence artifact | Remaining threat |
 | --- | --- | --- | --- |
@@ -60,6 +66,7 @@ The thesis is that AI serving can be framed as a routed memory-hierarchy problem
 | Apple Silicon can load and serve real LoRA adapters through vLLM-Metal | Proven for two adapters | `runs/vllm-metal-lora-proof.json`, `runs/vllm-metal-multi-lora-models.json`, `runs/vllm-metal-manifest-proof.json` | Does not prove Metal CPU LoRA cache tiering |
 | CUDA vLLM accepts upstream-style CPU LoRA cache tiering with more CPU-resident adapters than active adapters | Proven on Kaggle T4 | `runs/cuda-vllm-models.json`, `runs/kaggle-vllm-startup-v0-xformers.log` | Small model, hosted-notebook runtime, and only two configured adapters |
 | CUDA vLLM can serve multiple LoRA adapters through the same routed proof harness | Proven on bounded workload | `runs/cuda-vllm-tldr-proof.json`, `runs/cuda-vllm-pts-proof.json`, `runs/cuda-vllm-concurrency.json` | Public adapters prove serving mechanics, not broad domain superiority |
+| Distributed small-accelerator grids can reduce cost or power versus centralized large-GPU serving | Hypothesis; not yet proven | `runs/fleet.json`, bounded Kaggle T4 artifacts | Requires a hardware/cost/power benchmark with utilization, watts, network, and tail-latency measurements |
 | Full upstream-style adapter cache tiering works on Metal | Not proven; currently falsified for `max_cpu_loras > max_loras` | vLLM-Metal error log summarized in `docs/THESIS_PROGRESS.md` | Requires future vLLM-Metal support or a different Metal serving design |
 
 ## 4. Architecture
@@ -82,7 +89,11 @@ The proof harness models hot, warm, and cold tiers. Hot approximates accelerator
 
 The serving plane exposes OpenAI-compatible local APIs. The repository's `rme prove-openai` command sends routed prompts to any compatible server. This makes the harness usable with vLLM-Metal, CUDA vLLM, SGLang, llama.cpp servers, or other compatible local runtimes.
 
-### 4.5 Evaluation plane
+### 4.5 Infrastructure placement plane
+
+The same router that chooses an expert can also inform placement. In a centralized deployment, hot experts may share a large GPU pool. In a distributed deployment, experts can be pinned to smaller accelerators near a tenant, region, edge site, or agent cohort. The scheduler's objective is then not only correctness and latency, but also locality, power, utilization, and escalation cost. A useful implementation would record where each request ran, whether it was served by a local small accelerator or escalated to a larger pool, and how much data moved across the network. This paper treats that placement layer as a design implication and future benchmark target, not as a completed result.
+
+### 4.6 Evaluation plane
 
 Every proof writes JSON artifacts. Metrics include accuracy, baseline accuracy, route regret, fallback count, cache hits, cold loads, p50/p95 latency, model comparison wins/losses/ties, concurrency success/error count, and throughput.
 
@@ -194,7 +205,7 @@ The CUDA runner writes `runs/cuda-vllm-models.json`, `runs/cuda-vllm-tldr-proof.
 
 ## 8. Limitations and Threats to Validity
 
-The largest limitation is benchmark scale. The workload fixtures are transparent and useful for engineering, but they are not substitutes for large public benchmark suites. The second limitation is adapter quality. The public TLDR and PTS adapters prove serving mechanics and multi-adapter routing; they do not prove that domain-specific adapters outperform base models across all repository domains. The CUDA base-vs-adapter comparison was a six-item tie, not an adapter-quality win. The third limitation is concurrency scale. Current local and Kaggle concurrency runs are small and constrained by Apple Silicon memory, T4 memory, hosted-notebook time, and runtime tuning. The fourth limitation is platform parity: CUDA vLLM proves the upstream CPU LoRA cache-tier configuration, while vLLM-Metal still does not implement that mode.
+The largest limitation is benchmark scale. The workload fixtures are transparent and useful for engineering, but they are not substitutes for large public benchmark suites. The second limitation is adapter quality. The public TLDR and PTS adapters prove serving mechanics and multi-adapter routing; they do not prove that domain-specific adapters outperform base models across all repository domains. The CUDA base-vs-adapter comparison was a six-item tie, not an adapter-quality win. The third limitation is concurrency scale. Current local and Kaggle concurrency runs are small and constrained by Apple Silicon memory, T4 memory, hosted-notebook time, and runtime tuning. The fourth limitation is platform parity: CUDA vLLM proves the upstream CPU LoRA cache-tier configuration, while vLLM-Metal still does not implement that mode. The fifth limitation is infrastructure economics: the paper argues that routed experts make distributed small-accelerator deployments plausible, but the repository does not yet measure watts, capital cost, network overhead, operational complexity, or utilization across a real multi-node grid.
 
 These limitations are intentionally surfaced as falsification boundaries. The repository should not claim that all thesis claims are solved until large benchmark, multi-adapter, and cache-tier experiments are complete.
 
@@ -204,7 +215,7 @@ This work is adjacent to mixture-of-experts models, model cascades, retrieval-au
 
 ## 10. Conclusion
 
-The current evidence supports a refined thesis: routed memory-hierarchy expert systems are plausible when specialization units are small, routing is coarse-grained, and evaluation records quality, regret, latency, and cache behavior. The repository now proves deterministic routing, simulated fleet locality, learned-router improvement, local neural context routing, Apple Silicon vLLM-Metal LoRA serving, multi-adapter serving, and CUDA vLLM CPU LoRA cache-tier configuration with `max_cpu_loras > max_loras`. It does not yet prove large-scale public benchmark wins, production-scale concurrency, high-quality domain-adapter superiority, or full Metal hot/warm/cold adapter tiering. Those remaining gaps are concrete and measurable, which is the central purpose of this proof-oriented research artifact.
+The current evidence supports a refined thesis: routed memory-hierarchy expert systems are plausible when specialization units are small, routing is coarse-grained, and evaluation records quality, regret, latency, and cache behavior. The repository now proves deterministic routing, simulated fleet locality, learned-router improvement, local neural context routing, Apple Silicon vLLM-Metal LoRA serving, multi-adapter serving, and CUDA vLLM CPU LoRA cache-tier configuration with `max_cpu_loras > max_loras`. It also motivates an infrastructure corollary: routed systems may let some workloads scale through many smaller, power-efficient accelerators distributed across tenants, edge sites, or grid-like clusters, reducing the need for a single massive buildout when locality is strong. That corollary remains a hypothesis until measured against centralized large-GPU baselines. The repository does not yet prove large-scale public benchmark wins, production-scale concurrency, end-to-end infrastructure cost superiority, or full Metal hot/warm/cold adapter tiering. Those remaining gaps are concrete and measurable, which is the central purpose of this proof-oriented research artifact.
 
 ## Appendix A: Artifact Map
 
@@ -237,3 +248,4 @@ The following tasks are not fully completable in the current local-only setting 
 2. Proving production-scale CUDA vLLM/SGLang adapter cache behavior, because the current local host has no NVIDIA/CUDA GPU and the Kaggle proof is a bounded hosted-notebook run.
 3. Proving broad public benchmark performance, because that requires benchmark selection, licensing review, larger run budgets, and possibly stronger models.
 4. Proving many high-quality domain-specific adapters, because compatible adapters must be found or trained and then evaluated fairly.
+5. Proving distributed small-accelerator infrastructure economics, because that requires multi-node hardware, power telemetry, utilization traces, network measurements, and a centralized large-GPU baseline for comparison.
