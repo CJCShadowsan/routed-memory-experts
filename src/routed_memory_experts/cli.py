@@ -3,10 +3,18 @@ from __future__ import annotations
 import argparse
 import json
 
+from .adapter_manifest import load_adapter_manifest, manifest_to_dict
+from .artifact_validation import validate_artifacts, validation_results_to_dict
+from .concurrency import benchmark_openai_concurrency, concurrency_summary_to_dict
 from .fleet import fleet_summary_to_dict, simulate_agent_fleet, write_fleet_summary
 from .learned_router import compare_routers, router_comparison_to_dict
 from .ollama_backend import ollama_summary_to_dict, run_ollama_proof
-from .openai_backend import openai_summary_to_dict, run_openai_compatible_proof
+from .openai_backend import (
+    compare_openai_models,
+    openai_comparison_summary_to_dict,
+    openai_summary_to_dict,
+    run_openai_compatible_proof,
+)
 from .proof import run_proof, summary_to_dict
 from .runtime_readiness import check_runtime_readiness, runtime_readiness_to_dict
 
@@ -46,6 +54,32 @@ def main(argv: list[str] | None = None) -> int:
     openai.add_argument("--output", default="runs/openai-proof.json")
     openai.add_argument("--limit", type=int, default=None)
     openai.add_argument("--min-accuracy", type=float, default=0.75)
+    openai.add_argument("--adapter-manifest", default=None)
+
+    compare_openai = sub.add_parser("compare-openai-models", help="compare base and expert models on the same routed prompts")
+    compare_openai.add_argument("--base-url", default="http://127.0.0.1:8000/v1")
+    compare_openai.add_argument("--base-model", required=True)
+    compare_openai.add_argument("--expert-model", required=True)
+    compare_openai.add_argument("--workload", required=True)
+    compare_openai.add_argument("--experts", required=True)
+    compare_openai.add_argument("--output", default="runs/openai-model-comparison.json")
+    compare_openai.add_argument("--limit", type=int, default=None)
+
+    concurrency = sub.add_parser("benchmark-openai-concurrency", help="measure concurrent OpenAI-compatible routed serving")
+    concurrency.add_argument("--base-url", default="http://127.0.0.1:8000/v1")
+    concurrency.add_argument("--model", required=True)
+    concurrency.add_argument("--workload", required=True)
+    concurrency.add_argument("--experts", required=True)
+    concurrency.add_argument("--output", default="runs/openai-concurrency.json")
+    concurrency.add_argument("--requests", type=int, default=12)
+    concurrency.add_argument("--concurrency", type=int, default=3)
+    concurrency.add_argument("--adapter-manifest", default=None)
+
+    manifest = sub.add_parser("inspect-adapter-manifest", help="show adapter manifest route map")
+    manifest.add_argument("--manifest", required=True)
+
+    validate = sub.add_parser("validate-artifacts", help="validate proof artifact JSON files")
+    validate.add_argument("--path", default="runs")
 
     routers = sub.add_parser("compare-routers", help="compare learned router against keyword baseline")
     routers.add_argument("--train", required=True)
@@ -96,13 +130,44 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "prove-openai":
-        summary = run_openai_compatible_proof(args.workload, args.experts, args.base_url, args.model, args.output, args.limit)
+        summary = run_openai_compatible_proof(args.workload, args.experts, args.base_url, args.model, args.output, args.limit, args.adapter_manifest)
         data = openai_summary_to_dict(summary)
         print(json.dumps({k: v for k, v in data.items() if k != "records"}, indent=2, sort_keys=True))
         if summary.accuracy < args.min_accuracy:
             print(f"FAIL: OpenAI-compatible routed accuracy {summary.accuracy:.3f} < {args.min_accuracy:.3f}")
             return 10
         print("PASS: OpenAI-compatible routed expert proof met threshold")
+        return 0
+
+    if args.command == "compare-openai-models":
+        summary = compare_openai_models(args.workload, args.experts, args.base_url, args.base_model, args.expert_model, args.output, args.limit)
+        data = openai_comparison_summary_to_dict(summary)
+        print(json.dumps({k: v for k, v in data.items() if k != "records"}, indent=2, sort_keys=True))
+        print("PASS: OpenAI-compatible model comparison completed")
+        return 0
+
+    if args.command == "benchmark-openai-concurrency":
+        summary = benchmark_openai_concurrency(args.workload, args.experts, args.base_url, args.model, args.requests, args.concurrency, args.output, args.adapter_manifest)
+        data = concurrency_summary_to_dict(summary)
+        print(json.dumps({k: v for k, v in data.items() if k != "records"}, indent=2, sort_keys=True))
+        if summary.error_count:
+            print(f"FAIL: concurrent benchmark had {summary.error_count} errors")
+            return 11
+        print("PASS: OpenAI-compatible concurrency benchmark completed")
+        return 0
+
+    if args.command == "inspect-adapter-manifest":
+        manifest = load_adapter_manifest(args.manifest)
+        print(json.dumps(manifest_to_dict(manifest), indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "validate-artifacts":
+        results = validate_artifacts(args.path)
+        data = validation_results_to_dict(results)
+        print(json.dumps(data, indent=2, sort_keys=True))
+        if not data["valid"]:
+            return 12
+        print("PASS: proof artifacts match required schemas")
         return 0
 
     if args.command == "compare-routers":

@@ -1,0 +1,112 @@
+{
+  "accuracy": 1.0,
+  "base_url": "http://127.0.0.1:8000/v1",
+  "concurrency": 3,
+  "correct_count": 12,
+  "error_count": 0,
+  "model": "tldr",
+  "p50_latency_ms": 613.404082832858,
+  "p95_latency_ms": 1332.2507499251515,
+  "p99_latency_ms": 1332.2507499251515,
+  "records": [
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "py-pytest-1",
+      "latency_ms": 953.7833749782294,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "py-decorator-1",
+      "latency_ms": 292.1251670923084,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "k8s-deploy-1",
+      "latency_ms": 1332.2507499251515,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "k8s-helm-1",
+      "latency_ms": 1513.1260419730097,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "fin-npv-1",
+      "latency_ms": 613.404082832858,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "fin-wacc-1",
+      "latency_ms": 656.4410838764161,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "med-ci-1",
+      "latency_ms": 509.33029199950397,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "med-rct-1",
+      "latency_ms": 917.3874999396503,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "sec-xss-1",
+      "latency_ms": 589.644999941811,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "sec-csrf-1",
+      "latency_ms": 604.8972920980304,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gen-1",
+      "latency_ms": 645.2278329525143,
+      "model": "tldr",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "k8s-pod-1",
+      "latency_ms": 569.9880421161652,
+      "model": "tldr",
+      "success": true
+    }
+  ],
+  "request_count": 12,
+  "success_count": 12,
+  "throughput_requests_per_second": 3.810603581115534
+}

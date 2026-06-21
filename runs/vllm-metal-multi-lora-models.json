@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "created": 1782035353,
+      "created": 1782035492,
       "id": "Qwen/Qwen3-0.6B",
       "max_model_len": 1024,
       "object": "model",
@@ -15,9 +15,9 @@
           "allow_sampling": true,
           "allow_search_indices": false,
           "allow_view": true,
-          "created": 1782035353,
+          "created": 1782035492,
           "group": null,
-          "id": "modelperm-af4e8c81372b8766",
+          "id": "modelperm-9a0c4e6349673942",
           "is_blocking": false,
           "object": "model_permission",
           "organization": "*"
@@ -26,7 +26,7 @@
       "root": "Qwen/Qwen3-0.6B"
     },
     {
-      "created": 1782035353,
+      "created": 1782035492,
       "id": "tldr",
       "max_model_len": null,
       "object": "model",
@@ -40,15 +40,40 @@
           "allow_sampling": true,
           "allow_search_indices": false,
           "allow_view": true,
-          "created": 1782035353,
+          "created": 1782035492,
           "group": null,
-          "id": "modelperm-adba0a033570d7c9",
+          "id": "modelperm-957bdc5ce4f7fab5",
           "is_blocking": false,
           "object": "model_permission",
           "organization": "*"
         }
       ],
       "root": "phh/Qwen3-0.6B-TLDR-Lora"
+    },
+    {
+      "created": 1782035492,
+      "id": "pts",
+      "max_model_len": null,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": "Qwen/Qwen3-0.6B",
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1782035492,
+          "group": null,
+          "id": "modelperm-b939422fdc0eeb02",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "codelion/Qwen3-0.6B-PTS-DPO-LoRA"
     }
   ],
   "object": "list"

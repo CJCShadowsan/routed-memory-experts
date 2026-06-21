@@ -213,3 +213,53 @@ Claims still not fully proven:
 - Large public benchmark validation.
 - Many simultaneous LoRA/adaptor agents under real concurrency.
 - Hot/warm/cold adapter tiering with `max_cpu_loras > max_loras` on Metal, because vLLM-Metal explicitly does not implement that upstream cache tier yet.
+
+
+## Iteration 8 assessment
+
+Status: Completed all locally feasible roadmap tasks for the current Apple Silicon host.
+
+Closeness to ultimate goal: 84%.
+
+Evidence added:
+
+- Wrote `docs/COMPLETION_IMPLEMENTATION_PLAN.md`, an explicit task-by-task completion plan with acceptance gates.
+- Added `workloads/benchmark_expanded_v1.jsonl`, a 32-item expanded deterministic benchmark fixture spanning Kubernetes, Python, finance, medical literature, security, and general routing.
+- Added artifact validation via `rme validate-artifacts --path runs`; current proof artifacts validate successfully.
+- Added `rme compare-openai-models`, which compares a base OpenAI-compatible model and expert/adapter model on identical routed prompts and records wins/losses/ties plus latency.
+- Added `rme benchmark-openai-concurrency`, a small concurrent OpenAI-compatible serving benchmark that records throughput, errors, accuracy, and p50/p95/p99 latency.
+- Added adapter manifest support via `adapters/vllm_metal_manifest.json`, `rme inspect-adapter-manifest`, and `--adapter-manifest` routing for OpenAI-compatible proofs and concurrency benchmarks.
+- Proved a two-adapter vLLM-Metal configuration with `tldr=phh/Qwen3-0.6B-TLDR-Lora` and `pts=codelion/Qwen3-0.6B-PTS-DPO-LoRA` loaded under `Qwen/Qwen3-0.6B`.
+- Recorded multi-adapter served-model evidence in `runs/vllm-metal-multi-lora-models.json`.
+- Recorded manifest-routed proof in `runs/vllm-metal-manifest-proof.json`.
+- Recorded manifest-routed concurrency evidence in `runs/vllm-metal-manifest-concurrency.json`.
+- Rewrote `paper/routed-memory-experts.md` into an arXiv-style preprint draft with abstract, claims table, methodology, results, limitations, reproducibility, related work, and artifact appendix.
+- Added reproducibility scripts under `scripts/`.
+
+Observed result:
+
+- Expanded deterministic benchmark: 32 items, routed accuracy 0.9375, baseline accuracy 0.0625, route regret 0.0.
+- Base-vs-LoRA comparison on six live vLLM-Metal items: base accuracy 0.8333, expert accuracy 1.0, expert wins 1, losses 0, ties 5.
+- Single-adapter concurrency benchmark: 12 requests at concurrency 3, accuracy 1.0, error count 0, throughput about 3.81 requests/s, p95 about 1332 ms.
+- Manifest-routed two-adapter proof: accuracy 1.0 on six live items.
+- Manifest-routed two-adapter concurrency benchmark: 12 requests at concurrency 3, accuracy 1.0, error count 0, throughput about 3.58 requests/s, p95 about 1045 ms.
+
+Important implementation findings:
+
+- A second Qwen3-0.6B LoRA adapter initially failed under the default `--max-lora-rank 16` with `LoRA rank 64 is greater than max_lora_rank 16`; setting `--max-lora-rank 64` allowed two LoRAs to serve concurrently.
+- vLLM-Metal still does not implement upstream-style CPU LoRA cache tiering with `max_cpu_loras > max_loras`; this remains impossible to prove on the current Metal runtime.
+
+Claims additionally supported:
+
+- Multi-adapter LoRA serving works on this Apple Silicon vLLM-Metal environment for at least two compatible Qwen3-0.6B adapters.
+- The proof harness can route domains to different served adapter IDs through a manifest.
+- The harness can compare base vs expert model quality and latency on identical prompts.
+- The harness can measure small concurrent routed serving runs.
+
+Claims still not fully proven, and why they are not fully completable right now:
+
+- Large public benchmark validation: requires benchmark licensing/selection and substantially larger evaluation runs beyond the current local proof loop.
+- Production-scale concurrency: requires longer runs, larger traffic mixes, and likely stronger hardware/runtime tuning.
+- Upstream-style hot/warm/cold CPU LoRA cache tiering on Metal: blocked by vLLM-Metal `NotImplementedError` for `max_cpu_loras > max_loras`.
+- CUDA vLLM/SGLang adapter cache behavior: current host has no NVIDIA/CUDA GPU.
+- High-quality domain-specialized adapter superiority: current public adapters prove serving mechanics; proving domain superiority requires finding or training appropriate adapters and larger fair benchmarks.

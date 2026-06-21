@@ -1,0 +1,21 @@
+{
+  "base_model": "Qwen/Qwen3-0.6B",
+  "adapters": [
+    {
+      "name": "tldr",
+      "served_model": "tldr",
+      "source": "phh/Qwen3-0.6B-TLDR-Lora",
+      "domains": ["general", "finance", "medical-literature"],
+      "status": "proven",
+      "notes": "Loaded successfully under vLLM-Metal with --enable-lora --max-loras 2 --max-lora-rank 64. Used as a summarization-style adapter proof target."
+    },
+    {
+      "name": "pts",
+      "served_model": "pts",
+      "source": "codelion/Qwen3-0.6B-PTS-DPO-LoRA",
+      "domains": ["python", "kubernetes", "security"],
+      "status": "proven",
+      "notes": "Loaded successfully alongside tldr after raising --max-lora-rank to 64; default rank 16 was too small."
+    }
+  ]
+}

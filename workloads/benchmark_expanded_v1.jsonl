@@ -1,0 +1,32 @@
+{"id": "bench-k8s-helm-1", "domain": "kubernetes", "prompt": "For this Kubernetes helm chart, what command renders templates and what tests chart assertions?", "expected_contains": ["helm template", "helm unittest"]}
+{"id": "bench-k8s-helm-2", "domain": "kubernetes", "prompt": "In k8s helm validation, how do I check rendered manifests and chart assertions?", "expected_contains": ["helm template", "helm unittest"]}
+{"id": "bench-k8s-deploy-1", "domain": "kubernetes", "prompt": "For a Kubernetes deployment, what readiness fields are stronger than existence?", "expected_contains": ["availablereplicas", "observedgeneration"]}
+{"id": "bench-k8s-deploy-2", "domain": "kubernetes", "prompt": "When a deployment is applied, which status signals should I verify?", "expected_contains": ["availablereplicas", "observedgeneration"]}
+{"id": "bench-k8s-pod-1", "domain": "kubernetes", "prompt": "How should I debug a kubernetes pod that is not ready?", "expected_contains": ["events", "logs", "readiness probes"]}
+{"id": "bench-k8s-pod-2", "domain": "kubernetes", "prompt": "For a failing pod, what cluster signals help debug readiness?", "expected_contains": ["events", "logs", "readiness probes"]}
+{"id": "bench-py-pytest-1", "domain": "python", "prompt": "In Python pytest TDD, what should I run and prove first?", "expected_contains": ["pytest", "failure"]}
+{"id": "bench-py-pytest-2", "domain": "python", "prompt": "How should pytest be used before implementing a fix?", "expected_contains": ["pytest", "failure"]}
+{"id": "bench-py-decorator-1", "domain": "python", "prompt": "What should a Python decorator use to preserve metadata?", "expected_contains": ["functools.wraps"]}
+{"id": "bench-py-decorator-2", "domain": "python", "prompt": "Why use functools.wraps in a decorator?", "expected_contains": ["functools.wraps", "metadata"]}
+{"id": "bench-py-asyncio-1", "domain": "python", "prompt": "What should asyncio code avoid inside the event loop?", "expected_contains": ["asyncio", "blocking"]}
+{"id": "bench-py-asyncio-2", "domain": "python", "prompt": "How should asyncio tasks handle cancellation and waits?", "expected_contains": ["await", "cancellation"]}
+{"id": "bench-fin-npv-1", "domain": "finance", "prompt": "Explain NPV for an investment with future cash flow.", "expected_contains": ["discounts", "cash flow", "initial investment"]}
+{"id": "bench-fin-npv-2", "domain": "finance", "prompt": "How does NPV use a required return and initial investment?", "expected_contains": ["discounts", "cash flow", "initial investment"]}
+{"id": "bench-fin-wacc-1", "domain": "finance", "prompt": "What does WACC combine in capital structure?", "expected_contains": ["equity", "debt", "capital structure"]}
+{"id": "bench-fin-wacc-2", "domain": "finance", "prompt": "How does WACC blend financing costs?", "expected_contains": ["equity", "debt", "capital structure"]}
+{"id": "bench-fin-terminal-1", "domain": "finance", "prompt": "What does terminal value capture in a DCF?", "expected_contains": ["terminal value", "cash flows"]}
+{"id": "bench-fin-terminal-2", "domain": "finance", "prompt": "Name common terminal value methods.", "expected_contains": ["gordon growth", "exit multiple"]}
+{"id": "bench-med-randomized-1", "domain": "medical-literature", "prompt": "Why is a randomized clinical trial useful for causal evidence?", "expected_contains": ["randomized", "confounding", "chance"]}
+{"id": "bench-med-randomized-2", "domain": "medical-literature", "prompt": "What does randomized assignment reduce in trial design?", "expected_contains": ["confounding", "chance"]}
+{"id": "bench-med-cohort-1", "domain": "medical-literature", "prompt": "What does a cohort study follow over time?", "expected_contains": ["cohort", "exposed", "unexposed"]}
+{"id": "bench-med-cohort-2", "domain": "medical-literature", "prompt": "Which association estimates can a cohort study report?", "expected_contains": ["risk ratios", "hazard ratios"]}
+{"id": "bench-med-ci-1", "domain": "medical-literature", "prompt": "How should I interpret a confidence interval?", "expected_contains": ["uncertainty", "effect size"]}
+{"id": "bench-med-ci-2", "domain": "medical-literature", "prompt": "What does confidence interval communicate about estimation?", "expected_contains": ["uncertainty", "effect size"]}
+{"id": "bench-sec-xss-1", "domain": "security", "prompt": "Which defenses reduce XSS risk in HTML output?", "expected_contains": ["encoding", "csp", "html"]}
+{"id": "bench-sec-xss-2", "domain": "security", "prompt": "What should I use to mitigate xss with unsafe html sinks?", "expected_contains": ["encoding", "csp", "html"]}
+{"id": "bench-sec-csrf-1", "domain": "security", "prompt": "What are common CSRF defenses?", "expected_contains": ["samesite", "csrf tokens", "origin"]}
+{"id": "bench-sec-csrf-2", "domain": "security", "prompt": "How can SameSite and origin checks help CSRF defense?", "expected_contains": ["samesite", "origin"]}
+{"id": "bench-sec-sqli-1", "domain": "security", "prompt": "What prevents SQL injection in database commands?", "expected_contains": ["parameterized queries"]}
+{"id": "bench-sec-sqli-2", "domain": "security", "prompt": "How should code avoid sql injection from string concatenation?", "expected_contains": ["parameterized queries"]}
+{"id": "bench-gen-1", "domain": "general", "prompt": "What should happen when no specialist domain is obvious?", "expected_contains": ["specialist"]}
+{"id": "bench-gen-2", "domain": "general", "prompt": "When should a generalist route to a specialist?", "expected_contains": ["specialist"]}

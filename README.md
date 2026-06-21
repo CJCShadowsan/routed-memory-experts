@@ -1,23 +1,37 @@
 # Routed Memory Experts
 
-Proof-oriented research and implementation of a routed memory-hierarchy AI thesis: resident base capability, thousands of routable focused experts/agents, and hot/warm/cold model tiers spanning HBM, DRAM, and NVMe/SSD.
+Proof-oriented research and implementation of a routed memory-hierarchy AI thesis: resident base capability, thousands of routable focused experts/agents, and hot/warm/cold model tiers spanning accelerator memory, DRAM, and NVMe/SSD.
 
-The user inspiration is Dwarf Star-style tiny local agents/models, but this project expands the idea into a systems architecture where thousands of agents may each have their own hot model/adaptor state and can be routed, cached, evaluated, and escalated.
+The project treats the thesis as falsifiable engineering work. Every supported claim should have a machine-readable artifact under `runs/`; every unsupported claim should be recorded as a blocker or limitation.
 
-Contents:
+## Contents
 
-- `paper/routed-memory-experts.md` — research paper and narrowed thesis.
-- `docs/IMPLEMENTATION_PLAN.md` — full implementation plan.
-- `docs/adr/0001-routed-memory-hierarchy.md` — architectural decision record.
-- `docs/LOOP.md` — continual proof loop.
-- `docs/THESIS_PROGRESS.md` — iteration-by-iteration evidence vs thesis.
-- `src/routed_memory_experts/` — executable MVP.
-- `workloads/real_world_v1.jsonl` — domain-diverse workload fixture.
-- `tests/` — regression tests.
+- `paper/routed-memory-experts.md` — arXiv-style preprint draft with claims, methods, results, and limitations.
+- `docs/COMPLETION_IMPLEMENTATION_PLAN.md` — detailed plan for completing all feasible local tasks.
+- `docs/IMPLEMENTATION_PLAN.md` — original phased implementation plan.
+- `docs/THESIS_PROGRESS.md` — iteration-by-iteration evidence vs. thesis.
+- `src/routed_memory_experts/` — executable proof harness.
+- `workloads/real_world_v1.jsonl` — original domain-diverse workload fixture.
+- `workloads/benchmark_expanded_v1.jsonl` — larger deterministic benchmark fixture.
+- `adapters/vllm_metal_manifest.json` — current adapter route manifest.
+- `scripts/` — reproducibility scripts.
+- `runs/` — proof artifacts.
 
 ## Current proof scope
 
-The repo now proves the control-plane mechanics, learned routing, a real local Ollama neural backend, and an Apple Silicon vLLM-Metal/MLX OpenAI-compatible serving path with a loaded LoRA adapter. It is still a bounded proof harness rather than a frontier-quality benchmark suite.
+The repo now proves:
+
+- deterministic routed expert control plane;
+- hot/warm/cold cache observations with cold disk loads;
+- 1,000-agent locality simulation;
+- learned-router improvement over keyword routing on held-out synonym prompts;
+- local neural routed context injection through Ollama;
+- Apple Silicon vLLM-Metal/MLX OpenAI-compatible serving;
+- real LoRA adapter loading under vLLM-Metal;
+- artifact validation for proof JSONs;
+- optional live base-vs-LoRA and concurrency benchmarks when a vLLM-Metal server is running.
+
+It does **not** yet prove upstream-style vLLM-Metal CPU LoRA cache tiering with `max_cpu_loras > max_loras`; the current runtime explicitly rejects that mode.
 
 ## Quick start
 
@@ -27,35 +41,46 @@ uv venv --python 3.11
 uv pip install -e '.[dev]'
 pytest -q
 rme prove --workload workloads/real_world_v1.jsonl --experts experts --output runs/proof.json
-rme compare-routers --train workloads/router_train_v1.jsonl --dev workloads/router_dev_v1.jsonl --output runs/router-comparison.json
+rme prove --workload workloads/benchmark_expanded_v1.jsonl --experts experts --output runs/benchmark-proof.json
+rme validate-artifacts --path runs
 ```
 
-Success criteria for Phase 1:
+## Apple Silicon vLLM-Metal proof
 
-- routed accuracy >= 0.80
-- route regret <= 0.20
-- routed accuracy > generalist baseline
-- proof JSON records cold loads and hot/warm cache behavior
-
-Optional local neural proof, when Ollama is installed and a model is available:
+Install vLLM-Metal:
 
 ```bash
-rme prove-ollama --model gemma4:e4b --workload workloads/real_world_v1.jsonl --experts experts --output runs/ollama-proof.json --limit 6
+scripts/install-vllm-metal.sh
 ```
 
-This routes prompts through the same expert control plane, injects the selected expert context into a real local Ollama model, and records accuracy plus p50/p95 latency.
-
-Apple Silicon vLLM-Metal proof, after installing vLLM-Metal into `~/.venv-vllm-metal` and starting the server:
+Start the known-good base + LoRA server:
 
 ```bash
-source ~/.venv-vllm-metal/bin/activate
-VLLM_METAL_MEMORY_FRACTION=0.5 VLLM_METAL_USE_PAGED_ATTENTION=1 \
-  vllm serve Qwen/Qwen3-0.6B --host 127.0.0.1 --port 8000 --max-model-len 1024 \
-  --enable-lora --max-loras 2 --lora-modules tldr=phh/Qwen3-0.6B-TLDR-Lora
+scripts/start-vllm-metal-lora.sh
+```
 
+In another shell:
+
+```bash
+. .venv/bin/activate
 rme prove-openai --base-url http://127.0.0.1:8000/v1 --model tldr \
   --workload workloads/real_world_v1.jsonl --experts experts \
   --output runs/vllm-metal-lora-proof.json --limit 6
+
+rme compare-openai-models --base-url http://127.0.0.1:8000/v1 \
+  --base-model Qwen/Qwen3-0.6B --expert-model tldr \
+  --workload workloads/real_world_v1.jsonl --experts experts \
+  --output runs/vllm-metal-base-vs-lora.json --limit 6
+
+rme benchmark-openai-concurrency --base-url http://127.0.0.1:8000/v1 --model tldr \
+  --workload workloads/real_world_v1.jsonl --experts experts \
+  --output runs/vllm-metal-concurrency.json --requests 12 --concurrency 3
 ```
 
-This proves the OpenAI-compatible vLLM-Metal/MLX serving path, with a Qwen3 base model and a loaded LoRA adapter exposed as model `tldr`.
+## One-command local proof suite
+
+```bash
+scripts/run-local-proofs.sh
+```
+
+This runs deterministic proofs and skips live OpenAI-compatible proofs if no server is reachable at `http://127.0.0.1:8000/health`.
