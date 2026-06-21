@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import os
 import signal
+import shutil
 import subprocess
 import sys
 import time
@@ -52,8 +53,13 @@ def ensure_isolated_venv() -> None:
 
     py = venv_python()
     if not py.exists():
-        print(f"Creating isolated virtualenv at {VENV_DIR}")
-        venv.EnvBuilder(with_pip=True, clear=False, symlinks=True).create(VENV_DIR)
+        create_venv_with_pip_fallback()
+
+    try:
+        run([str(py), "-m", "pip", "--version"], timeout=60)
+    except subprocess.CalledProcessError:
+        print("Virtualenv exists but pip is unavailable; recreating it with fallback bootstrap")
+        create_venv_with_pip_fallback(force=True)
 
     print("Installing proof dependencies into isolated virtualenv")
     run([str(py), "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"], timeout=300)
@@ -64,6 +70,31 @@ def ensure_isolated_venv() -> None:
     env[IN_VENV_ENV] = "1"
     print("Re-running proof inside isolated virtualenv")
     os.execve(str(py), [str(py), str(Path(__file__).resolve())], env)
+
+
+def create_venv_with_pip_fallback(force: bool = False) -> None:
+    """Create the proof venv, falling back when ensurepip is unavailable.
+
+    Some hosted notebook Python builds fail during `venv(..., with_pip=True)`
+    because the inner `python -m ensurepip` command exits non-zero. In that
+    case we create the venv without pip and bootstrap pip with get-pip.py.
+    """
+    if force and VENV_DIR.exists():
+        shutil.rmtree(VENV_DIR)
+
+    print(f"Creating isolated virtualenv at {VENV_DIR}")
+    try:
+        venv.EnvBuilder(with_pip=True, clear=True, symlinks=True).create(VENV_DIR)
+        return
+    except subprocess.CalledProcessError as exc:
+        print(f"venv ensurepip failed: {exc}; retrying with get-pip.py bootstrap")
+        if VENV_DIR.exists():
+            shutil.rmtree(VENV_DIR)
+
+    venv.EnvBuilder(with_pip=False, clear=True, symlinks=True).create(VENV_DIR)
+    get_pip = ROOT / ".kaggle-get-pip.py"
+    urllib.request.urlretrieve("https://bootstrap.pypa.io/get-pip.py", get_pip)
+    run([str(venv_python()), str(get_pip)], timeout=300)
 
 
 def wait_for_health(timeout_s: int = 300) -> None:
