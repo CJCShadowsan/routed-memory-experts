@@ -47,8 +47,8 @@ The first reviewed public benchmark for the next external run is GSM8K (Grade Sc
 - RME conversion: `scripts/build-gsm8k-public-workload.py` extracts the final numeric answer and writes `expected_contains` for the existing exact-evidence scorer.
 - Current sample: `workloads/gsm8k_public_sample.jsonl`, 64 records from test offset 0.
 
-This benchmark satisfies the workload metadata contract and is appropriate for public benchmark smoke/comparison runs. It does **not** by itself prove TLDR/PTS adapter superiority; a math-capable adapter should be selected before making adapter-quality claims.
+This benchmark satisfies the workload metadata contract and is appropriate for public benchmark smoke/comparison runs. It does **not** by itself prove TLDR/PTS adapter superiority; those are serving-mechanics adapters, not math-quality candidates. The committed CUDA GSM8K artifact with `tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora` provides a bounded 32-item adapter-quality win over its Qwen2.5 base, but the win is narrow and should be expanded before broad publication claims.
 
 ## Current status
 
-The current repo now includes a reviewed public benchmark sample workload, but not live public benchmark performance artifacts. The next external run should use `scripts/run-openai-public-benchmark.sh` with `workloads/gsm8k_public_sample.jsonl` and a live server.
+The current repo now includes both the reviewed public benchmark sample workload and live CUDA public benchmark artifacts under `runs/cuda-vllm-gsm8k-*.json`. Future external runs should expand sample size, repeatability, and capacity measurements rather than treating the 32-item sample as a final benchmark result.

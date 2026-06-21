@@ -322,7 +322,7 @@ Claims additionally supported:
 
 Claims still not fully proven:
 
-- No live GSM8K model/adaptor results are claimed yet; running the workload requires a live OpenAI-compatible server.
+- Superseded by Iteration 13: live CUDA GSM8K model/adaptor results are now committed under `runs/cuda-vllm-gsm8k-*.json`.
 - TLDR and PTS adapters are not math-quality candidates. A math-capable adapter should be selected or trained before using GSM8K to claim adapter superiority.
 - Production-scale concurrency still requires an external longer-running GPU/server run.
 
@@ -348,7 +348,7 @@ Local blockers discovered:
 Claims still not fully proven:
 
 - Adapter quality superiority is still unproven and currently falsified for the tested Qwen2.5 GSM8K LoRA on the 32-item local run.
-- CUDA public benchmark and production-scale concurrency still need the Kaggle/CUDA script output.
+- Superseded by Iteration 13: CUDA public benchmark output is now committed; production-scale concurrency remains open.
 
 ## Iteration 12 assessment
 
@@ -370,3 +370,28 @@ Evidence currently relevant:
 Claims still not proven:
 
 - No end-to-end cost/power superiority claim is proven. A valid infrastructure claim needs a benchmark comparing centralized large-GPU serving against distributed smaller-accelerator serving on the same workload, including watts, utilization, capital cost per successful request, network transfer, p50/p95 latency, error rate, and escalation rate.
+
+## Iteration 13 assessment
+
+Status: Folded the 32-item CUDA GSM8K proof artifacts into the thesis ledger.
+
+Closeness to ultimate goal: 95% for the repository's bounded evidence standard; broader publication-grade claims still require larger benchmarks and capacity studies.
+
+Evidence added:
+
+- Copied and committed the 32-item Kaggle CUDA GSM8K artifacts: `runs/cuda-vllm-gsm8k-models.json`, `runs/cuda-vllm-gsm8k-public-openai-benchmark.json`, `runs/cuda-vllm-gsm8k-math-proof.json`, `runs/cuda-vllm-gsm8k-concurrency.json`, `runs/proof-gap-ledger.json`, and `runs/kaggle-vllm-gsm8k-startup-v0-xformers.log`.
+- `runs/cuda-vllm-gsm8k-public-openai-benchmark.json` records base `Qwen/Qwen2.5-0.5B-Instruct` at 11/32 and `tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora` at 12/32 on the non-leaky public GSM8K benchmark path, with 4 expert wins, 3 expert losses, and 25 ties.
+- `runs/cuda-vllm-gsm8k-math-proof.json` records 13/32 correct routed math-adapter responses.
+- `runs/cuda-vllm-gsm8k-concurrency.json` records 32/32 successful requests, 0 errors, throughput about 0.286 requests/s, p50 latency about 11407 ms, p95 about 27216 ms, and p99 about 27291 ms at concurrency 4.
+- `runs/proof-gap-ledger.json` now reports completion score 0.75, open gap count 2, external-required count 1, and blocked-upstream count 1.
+
+Claims additionally supported:
+
+- The repository's bounded adapter-quality threshold is now met for one reviewed public benchmark sample: workload count >= 30, expert accuracy > base accuracy, and expert wins > expert losses.
+- CUDA vLLM can serve the Qwen2.5 base plus GSM8K math LoRA through the same OpenAI-compatible proof harness that validated previous serving-mechanics adapters.
+
+Claims still not fully proven:
+
+- The GSM8K quality result is narrow: +1 correct answer over base on 32 items, with substantially higher adapter latency. It should be presented as bounded evidence, not a strong benchmark victory.
+- Production-scale concurrency and capacity remain open; the current concurrency run is 32 requests in a hosted notebook, not a saturation curve.
+- vLLM-Metal upstream-style CPU LoRA cache tiering remains blocked by runtime support.

@@ -34,6 +34,7 @@ The repo now proves:
 - Apple Silicon vLLM-Metal/MLX OpenAI-compatible serving;
 - real LoRA adapter loading under vLLM-Metal;
 - CUDA vLLM LoRA serving on Kaggle T4 with `max_cpu_loras > max_loras`;
+- a bounded 32-item public GSM8K CUDA adapter-quality win for a Qwen2.5 math LoRA over its base model;
 - artifact validation for proof JSONs;
 - optional live base-vs-LoRA and concurrency benchmarks when a vLLM-Metal server is running.
 
@@ -144,3 +145,5 @@ The dedicated Kaggle/CUDA public benchmark runner is:
 ```bash
 python scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py
 ```
+
+The committed 32-item CUDA GSM8K artifact records a narrow adapter win: base `Qwen/Qwen2.5-0.5B-Instruct` scored 11/32, while `tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora` scored 12/32 with 4 expert wins, 3 expert losses, and 25 ties. This satisfies the repository's bounded adapter-quality threshold, but it is not a large-margin result and the adapter path is substantially slower.
