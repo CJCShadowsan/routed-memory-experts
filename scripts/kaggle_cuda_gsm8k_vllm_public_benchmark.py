@@ -34,6 +34,10 @@ VLLM_PACKAGE = "vllm==0.10.2"
 TRANSFORMERS_PACKAGE = "transformers>=4.55.0,<5"
 BASE_MODEL = "Qwen/Qwen2.5-0.5B-Instruct"
 MATH_ADAPTER = "tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora"
+PUBLIC_BENCHMARK_LIMIT = "8"
+PROOF_LIMIT = "8"
+CONCURRENCY_REQUESTS = "16"
+CONCURRENCY_LEVEL = "4"
 
 
 def venv_python() -> Path:
@@ -170,14 +174,14 @@ def save_models() -> None:
 
 def run_benchmark_commands() -> None:
     commands = [
-        rme_cmd("benchmark-public-openai", "--base-url", V1_URL, "--base-model", BASE_MODEL, "--expert-model", "math", "--workload", "workloads/gsm8k_public_sample.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-gsm8k-public-openai-benchmark.json"),
-        rme_cmd("prove-openai", "--base-url", V1_URL, "--model", "math", "--workload", "workloads/gsm8k_public_sample.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-gsm8k-math-proof.json", "--min-accuracy", "0.0"),
-        rme_cmd("benchmark-openai-concurrency", "--base-url", V1_URL, "--model", "math", "--workload", "workloads/gsm8k_public_sample.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-gsm8k-concurrency.json", "--requests", "64", "--concurrency", "8"),
+        rme_cmd("benchmark-public-openai", "--base-url", V1_URL, "--base-model", BASE_MODEL, "--expert-model", "math", "--workload", "workloads/gsm8k_public_sample.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-gsm8k-public-openai-benchmark.json", "--limit", PUBLIC_BENCHMARK_LIMIT),
+        rme_cmd("prove-openai", "--base-url", V1_URL, "--model", "math", "--workload", "workloads/gsm8k_public_sample.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-gsm8k-math-proof.json", "--limit", PROOF_LIMIT, "--min-accuracy", "0.0"),
+        rme_cmd("benchmark-openai-concurrency", "--base-url", V1_URL, "--model", "math", "--workload", "workloads/gsm8k_public_sample.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-gsm8k-concurrency.json", "--requests", CONCURRENCY_REQUESTS, "--concurrency", CONCURRENCY_LEVEL),
         rme_cmd("summarize-proof-gaps", "--runs", "runs", "--output", "runs/proof-gap-ledger.json"),
         rme_cmd("validate-artifacts", "--path", "runs"),
     ]
     for cmd in commands:
-        run(cmd, timeout=1200)
+        run(cmd, timeout=1800)
 
 
 def main() -> int:
