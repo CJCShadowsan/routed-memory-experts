@@ -134,7 +134,7 @@ def ensure_isolated_venv() -> None:
         create_venv_with_pip_fallback(force=True)
 
     print("Installing proof dependencies into isolated virtualenv")
-    run([str(py), "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"], timeout=300)
+    run([str(py), "-m", "pip", "install", "--upgrade", "pip", "wheel", "setuptools<81"], timeout=300)
     # Some hosted notebook images expose CUDA/Python packages whose optional
     # imports assume wrapt is present, while fresh isolated venvs do not include
     # it. Install it explicitly so vLLM/torch-adjacent import paths do not fail
@@ -263,7 +263,14 @@ def main() -> int:
         "--port",
         "8000",
         "--max-model-len",
-        "1024",
+        "768",
+        "--gpu-memory-utilization",
+        "0.55",
+        "--max-num-seqs",
+        "4",
+        "--max-num-batched-tokens",
+        "768",
+        "--enforce-eager",
         "--enable-lora",
         "--max-loras",
         "2",
@@ -276,12 +283,12 @@ def main() -> int:
         "pts=codelion/Qwen3-0.6B-PTS-DPO-LoRA",
     ]
     attempts = [
-        ("default", {}),
+        ("default", {"PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
         # Hosted T4 notebooks can fail inside FlashInfer/JIT startup. TORCH_SDPA
         # is slower but avoids that path and is sufficient for the proof.
-        ("torch-sdpa", {"VLLM_ATTENTION_BACKEND": "TORCH_SDPA"}),
+        ("torch-sdpa", {"VLLM_ATTENTION_BACKEND": "TORCH_SDPA", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
         # Final fallback: vLLM's legacy engine sometimes avoids V1 startup issues.
-        ("legacy-xformers", {"VLLM_USE_V1": "0", "VLLM_ATTENTION_BACKEND": "XFORMERS"}),
+        ("legacy-xformers", {"VLLM_USE_V1": "0", "VLLM_ATTENTION_BACKEND": "XFORMERS", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
     ]
     server = None
     log_handle = None
