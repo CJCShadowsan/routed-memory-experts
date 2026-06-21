@@ -36,6 +36,19 @@ def _comparison_shows_adapter_win(data: dict[str, Any], min_items: int) -> bool:
     return workload_count >= min_items and expert_wins > expert_losses and expert_accuracy > base_accuracy
 
 
+def _comparison_shows_adapter_edge(data: dict[str, Any]) -> bool:
+    expert_wins = int(data.get("expert_wins", 0))
+    expert_losses = int(data.get("expert_losses", 0))
+    expert_accuracy = float(data.get("expert_accuracy", 0.0))
+    base_accuracy = float(data.get("base_accuracy", 0.0))
+    return expert_wins > expert_losses and expert_accuracy > base_accuracy
+
+
+def _comparison_artifacts(runs_path: Path) -> list[tuple[Path, dict[str, Any]]]:
+    paths = sorted(set(runs_path.glob("*base-vs*.json")) | set(runs_path.glob("*public-openai-benchmark*.json")))
+    return [(path, data) for path in paths if (data := _load_json(path))]
+
+
 def _largest_concurrency_run(runs_path: Path) -> dict[str, Any] | None:
     best: dict[str, Any] | None = None
     for path in runs_path.glob("*concurrency*.json"):
@@ -114,15 +127,27 @@ def summarize_proof_gaps(runs_path: str | Path = "runs", output_path: str | Path
         )
     )
 
-    comparisons = [data for path in list(runs.glob("*base-vs*.json")) + list(runs.glob("*public-openai-benchmark*.json")) if (data := _load_json(path))]
-    adapter_win = any(_comparison_shows_adapter_win(data, min_items=30) for data in comparisons)
+    comparisons = _comparison_artifacts(runs)
+    adapter_win = any(_comparison_shows_adapter_win(data, min_items=30) for _path, data in comparisons)
+    bounded_adapter_edge = any(_comparison_shows_adapter_edge(data) for _path, data in comparisons)
+    comparison_evidence = [str(path) for path, _data in comparisons]
+    adapter_remaining = (
+        "A bounded CUDA GSM8K run shows expert > base, but the sample is below the >=30-item threshold for a quality-superiority claim."
+        if bounded_adapter_edge and not adapter_win
+        else "Current public adapters prove serving mechanics; available base-vs-expert results do not yet meet the >=30-item quality-superiority threshold."
+    )
+    adapter_next_action = (
+        "Run a larger CUDA GSM8K/public benchmark (>=30 items, preferably full split or repeated seeds) and keep or train/select a stronger math adapter before publication-grade quality claims."
+        if bounded_adapter_edge and not adapter_win
+        else "Train/select a stronger adapter, then rerun scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py at >=30 items before claiming quality superiority."
+    )
     gaps.append(
         ProofGap(
             claim="High-quality domain adapters beat the base model on a sufficiently large benchmark.",
             status="proven" if adapter_win else "external_required",
-            evidence=["runs/*base-vs*.json", "runs/*public-openai-benchmark*.json"] if adapter_win else ["runs/cuda-vllm-base-vs-tldr.json", "runs/vllm-metal-base-vs-lora.json", "runs/local-vllm-gsm8k-public-openai-benchmark.json"],
-            remaining="Current public adapters prove serving mechanics; CUDA base-vs-TLDR tied on six items; local GSM8K Qwen2.5 math LoRA run did not beat base.",
-            next_action="Run scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py on CUDA and, if the adapter still underperforms, train/select a stronger math adapter before claiming quality superiority.",
+            evidence=comparison_evidence,
+            remaining="None; threshold met." if adapter_win else adapter_remaining,
+            next_action="Keep as a regression and expand to a full public benchmark." if adapter_win else adapter_next_action,
         )
     )
 

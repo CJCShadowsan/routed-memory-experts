@@ -38,6 +38,33 @@ def test_summarize_proof_gaps_marks_local_and_external_claims(tmp_path):
     assert out.exists()
 
 
+def test_summarize_proof_gaps_uses_bounded_cuda_gsm8k_evidence(tmp_path):
+    runs = tmp_path / "runs"
+    write_json(
+        runs / "cuda-vllm-gsm8k-public-openai-benchmark.json",
+        {
+            "artifact_family": "public-openai-benchmark",
+            "workload_count": 8,
+            "base_accuracy": 0.25,
+            "expert_accuracy": 0.375,
+            "expert_wins": 1,
+            "expert_losses": 0,
+            "records": [],
+        },
+    )
+
+    data = summarize_proof_gaps(runs)
+    adapter_gap = next(
+        gap for gap in data["gaps"] if gap["claim"] == "High-quality domain adapters beat the base model on a sufficiently large benchmark."
+    )
+
+    assert adapter_gap["status"] == "external_required"
+    assert str(runs / "cuda-vllm-gsm8k-public-openai-benchmark.json") in adapter_gap["evidence"]
+    assert "bounded CUDA GSM8K run shows expert > base" in adapter_gap["remaining"]
+    assert ">=30 items" in adapter_gap["next_action"]
+    assert "Run scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py on CUDA" not in adapter_gap["next_action"]
+
+
 def test_proof_gap_ledger_validates(tmp_path):
     path = tmp_path / "proof-gap-ledger.json"
     path.write_text(
