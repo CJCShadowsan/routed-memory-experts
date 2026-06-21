@@ -63,6 +63,11 @@ def ensure_isolated_venv() -> None:
 
     print("Installing proof dependencies into isolated virtualenv")
     run([str(py), "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"], timeout=300)
+    # Some hosted notebook images expose CUDA/Python packages whose optional
+    # imports assume wrapt is present, while fresh isolated venvs do not include
+    # it. Install it explicitly so vLLM/torch-adjacent import paths do not fail
+    # with `ModuleNotFoundError: No module named 'wrapt'`.
+    run([str(py), "-m", "pip", "install", "-q", "wrapt"], timeout=300)
     run([str(py), "-m", "pip", "install", "-q", "-e", ".[dev]"], timeout=600)
     run([str(py), "-m", "pip", "install", "-q", "vllm"], timeout=1200)
 
