@@ -243,6 +243,22 @@ def save_models() -> None:
     print(f"wrote {out}")
 
 
+def rme_cmd(*args: str) -> list[str]:
+    return [sys.executable, "-m", "routed_memory_experts.cli", *args]
+
+
+def run_cuda_proof_commands() -> None:
+    commands = [
+        rme_cmd("prove-openai", "--base-url", V1_URL, "--model", "tldr", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-tldr-proof.json", "--limit", "6", "--min-accuracy", "0.75"),
+        rme_cmd("prove-openai", "--base-url", V1_URL, "--model", "pts", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-pts-proof.json", "--limit", "6", "--min-accuracy", "0.50"),
+        rme_cmd("compare-openai-models", "--base-url", V1_URL, "--base-model", "Qwen/Qwen3-0.6B", "--expert-model", "tldr", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-base-vs-tldr.json", "--limit", "6"),
+        rme_cmd("benchmark-openai-concurrency", "--base-url", V1_URL, "--model", "tldr", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-concurrency.json", "--requests", "24", "--concurrency", "4"),
+        rme_cmd("validate-artifacts", "--path", "runs"),
+    ]
+    for cmd in commands:
+        run(cmd, timeout=600)
+
+
 def main() -> int:
     sanitize_current_process_env()
     ensure_isolated_venv()
@@ -283,53 +299,40 @@ def main() -> int:
         "pts=codelion/Qwen3-0.6B-PTS-DPO-LoRA",
     ]
     attempts = [
-        ("default", {"PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
-        # Hosted T4 notebooks can fail inside FlashInfer/JIT startup. TORCH_SDPA
-        # is slower but avoids that path and is sufficient for the proof.
+        # Prefer a non-FlashInfer backend on Kaggle T4. The default backend can
+        # start successfully and then crash on the first LoRA request with
+        # `BatchPrefillWithPagedKVCache failed with error invalid argument`.
+        ("xformers", {"VLLM_ATTENTION_BACKEND": "XFORMERS", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
         ("torch-sdpa", {"VLLM_ATTENTION_BACKEND": "TORCH_SDPA", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
-        # Final fallback: vLLM's legacy engine sometimes avoids V1 startup issues.
+        ("default", {"PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
         ("legacy-xformers", {"VLLM_USE_V1": "0", "VLLM_ATTENTION_BACKEND": "XFORMERS", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
     ]
-    server = None
-    log_handle = None
-    log_path = None
-    startup_errors = []
+    attempt_errors = []
     for label, overrides in attempts:
-        server, log_handle, log_path = start_vllm_server(server_cmd, overrides, label)
+        server = None
+        log_handle = None
+        log_path = None
         try:
+            server, log_handle, log_path = start_vllm_server(server_cmd, overrides, label)
             wait_for_health(server, log_path)
             print(f"vLLM startup attempt '{label}' succeeded; log: {log_path}")
-            break
-        except RuntimeError as exc:
-            startup_errors.append(f"[{label}] {exc}")
-            print(f"vLLM startup attempt '{label}' failed; retrying if possible")
-            stop_vllm_server(server, log_handle)
-            server = None
-            log_handle = None
-            log_path = None
-    else:
-        raise RuntimeError("All vLLM startup attempts failed:\n" + "\n\n".join(startup_errors))
+            save_models()
+            run_cuda_proof_commands()
+            print("CUDA vLLM proof complete. Download runs/cuda-*.json from Kaggle output.")
+            return 0
+        except (RuntimeError, subprocess.CalledProcessError) as exc:
+            log_tail = tail_file(log_path) if log_path is not None else ""
+            attempt_errors.append(f"[{label}] {exc}\n{log_tail}")
+            print(f"vLLM proof attempt '{label}' failed; retrying if possible")
+        finally:
+            print("Stopping vLLM server...")
+            if server is not None:
+                stop_vllm_server(server, log_handle)
+            if log_path is not None:
+                print(f"--- vLLM server output tail ({log_path}) ---")
+                print(tail_file(log_path))
 
-    try:
-        save_models()
-        commands = [
-            ["rme", "prove-openai", "--base-url", V1_URL, "--model", "tldr", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-tldr-proof.json", "--limit", "6", "--min-accuracy", "0.75"],
-            ["rme", "prove-openai", "--base-url", V1_URL, "--model", "pts", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-pts-proof.json", "--limit", "6", "--min-accuracy", "0.50"],
-            ["rme", "compare-openai-models", "--base-url", V1_URL, "--base-model", "Qwen/Qwen3-0.6B", "--expert-model", "tldr", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-base-vs-tldr.json", "--limit", "6"],
-            ["rme", "benchmark-openai-concurrency", "--base-url", V1_URL, "--model", "tldr", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-concurrency.json", "--requests", "24", "--concurrency", "4"],
-            ["rme", "validate-artifacts", "--path", "runs"],
-        ]
-        for cmd in commands:
-            run(cmd, timeout=600)
-        print("CUDA vLLM proof complete. Download runs/cuda-*.json from Kaggle output.")
-        return 0
-    finally:
-        print("Stopping vLLM server...")
-        if server is not None:
-            stop_vllm_server(server, log_handle)
-        if log_path is not None:
-            print(f"--- vLLM server output tail ({log_path}) ---")
-            print(tail_file(log_path))
+    raise RuntimeError("All vLLM proof attempts failed:\n" + "\n\n".join(attempt_errors))
 
 
 if __name__ == "__main__":
