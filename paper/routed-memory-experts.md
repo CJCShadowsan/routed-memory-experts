@@ -1,7 +1,7 @@
 # Routed Memory-Hierarchy Expert Systems: A Proof-Oriented Study of Local Routing, Adapter Serving, and Capacity Tiers
 
-**Author:** CJCShadowsan / Routed Memory Experts contributors  
-**Repository:** `CJCShadowsan/routed-memory-experts`  
+**Author:** CJCShadowsan / Routed Memory Experts contributors
+**Repository:** `CJCShadowsan/routed-memory-experts`
 **Status:** arXiv-style preprint draft; not peer reviewed; empirical claims are limited to the included artifacts and current local hardware.
 
 ## Abstract
