@@ -28,6 +28,7 @@ V1_URL = f"{BASE_URL}/v1"
 VENV_DIR = ROOT / ".kaggle-venv"
 IN_VENV_ENV = "RME_KAGGLE_PROOF_IN_VENV"
 PYTHON_ENV_VARS_TO_DROP = ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE")
+CUDA_LINK_DIR = ROOT / ".cuda-link"
 
 
 def venv_python() -> Path:
@@ -55,6 +56,54 @@ def sanitize_current_process_env() -> None:
     for key in PYTHON_ENV_VARS_TO_DROP:
         os.environ.pop(key, None)
     os.environ["PYTHONNOUSERSITE"] = "1"
+
+
+def prepend_env_path(key: str, path: Path) -> None:
+    current = os.environ.get(key)
+    value = str(path)
+    if current:
+        parts = current.split(os.pathsep)
+        if value not in parts:
+            os.environ[key] = os.pathsep.join([value, *parts])
+    else:
+        os.environ[key] = value
+
+
+def configure_cuda_linker_env() -> None:
+    """Make libcuda discoverable for hosted-notebook JIT linkers.
+
+    Kaggle can expose the NVIDIA driver well enough for `nvidia-smi` while not
+    providing an unversioned `libcuda.so` in the directories used by
+    FlashInfer/vLLM's JIT linker. If only `libcuda.so.1` exists, create a local
+    `libcuda.so` symlink and put it on LIBRARY_PATH/LD_LIBRARY_PATH.
+    """
+    candidate_dirs = [
+        Path("/usr/lib/x86_64-linux-gnu"),
+        Path("/usr/local/nvidia/lib64"),
+        Path("/usr/local/cuda/lib64/stubs"),
+        Path("/usr/local/cuda/targets/x86_64-linux/lib/stubs"),
+    ]
+    for directory in candidate_dirs:
+        if (directory / "libcuda.so").exists():
+            prepend_env_path("LIBRARY_PATH", directory)
+            prepend_env_path("LD_LIBRARY_PATH", directory)
+            print(f"Using existing libcuda.so from {directory}")
+            return
+
+    for directory in candidate_dirs:
+        versioned = directory / "libcuda.so.1"
+        if versioned.exists():
+            CUDA_LINK_DIR.mkdir(exist_ok=True)
+            target = CUDA_LINK_DIR / "libcuda.so"
+            if target.exists() or target.is_symlink():
+                target.unlink()
+            target.symlink_to(versioned)
+            prepend_env_path("LIBRARY_PATH", CUDA_LINK_DIR)
+            prepend_env_path("LD_LIBRARY_PATH", CUDA_LINK_DIR)
+            print(f"Created {target} -> {versioned} for CUDA JIT linking")
+            return
+
+    print("WARNING: no libcuda.so or libcuda.so.1 found in known locations; vLLM JIT linking may fail")
 
 
 def run(cmd: list[str], check: bool = True, timeout: int | None = None) -> subprocess.CompletedProcess:
@@ -155,6 +204,7 @@ def main() -> int:
     print("Python executable:", sys.executable)
     run([sys.executable, "-m", "pytest", "-q"])
     run(["nvidia-smi"], check=False, timeout=60)
+    configure_cuda_linker_env()
 
     server_cmd = [
         sys.executable,
@@ -180,7 +230,14 @@ def main() -> int:
         "pts=codelion/Qwen3-0.6B-PTS-DPO-LoRA",
     ]
     print("Starting CUDA vLLM server with max_cpu_loras > max_loras...")
-    server = subprocess.Popen(server_cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    server = subprocess.Popen(
+        server_cmd,
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        env=sanitized_env(),
+    )
     try:
         wait_for_health()
         save_models()
