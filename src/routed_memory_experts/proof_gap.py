@@ -114,15 +114,15 @@ def summarize_proof_gaps(runs_path: str | Path = "runs", output_path: str | Path
         )
     )
 
-    comparisons = [data for path in runs.glob("*base-vs*.json") if (data := _load_json(path))]
+    comparisons = [data for path in list(runs.glob("*base-vs*.json")) + list(runs.glob("*public-openai-benchmark*.json")) if (data := _load_json(path))]
     adapter_win = any(_comparison_shows_adapter_win(data, min_items=30) for data in comparisons)
     gaps.append(
         ProofGap(
             claim="High-quality domain adapters beat the base model on a sufficiently large benchmark.",
             status="proven" if adapter_win else "external_required",
-            evidence=["runs/*base-vs*.json"] if adapter_win else ["runs/cuda-vllm-base-vs-tldr.json", "runs/vllm-metal-base-vs-lora.json"],
-            remaining="Current public adapters prove serving mechanics; CUDA base-vs-TLDR tied on six items.",
-            next_action="Use workloads/gsm8k_public_sample.jsonl with a math-capable adapter, or another reviewed public benchmark with a matching adapter, and run a >=30 item comparison.",
+            evidence=["runs/*base-vs*.json", "runs/*public-openai-benchmark*.json"] if adapter_win else ["runs/cuda-vllm-base-vs-tldr.json", "runs/vllm-metal-base-vs-lora.json", "runs/local-vllm-gsm8k-public-openai-benchmark.json"],
+            remaining="Current public adapters prove serving mechanics; CUDA base-vs-TLDR tied on six items; local GSM8K Qwen2.5 math LoRA run did not beat base.",
+            next_action="Run scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py on CUDA and, if the adapter still underperforms, train/select a stronger math adapter before claiming quality superiority.",
         )
     )
 

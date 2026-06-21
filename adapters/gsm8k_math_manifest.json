@@ -1,0 +1,13 @@
+{
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapters": [
+    {
+      "name": "math",
+      "served_model": "math",
+      "source": "tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora",
+      "domains": ["math"],
+      "status": "candidate",
+      "notes": "Apache-2.0 GSM8K PEFT LoRA candidate. Loads through local direct vLLM Python API on Mac. Current local 32-item GSM8K run did not beat base: base 5/32, adapter 3/32."
+    }
+  ]
+}

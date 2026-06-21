@@ -128,3 +128,17 @@ scripts/run-openai-public-benchmark.sh \
   --requests 1000 \
   --concurrency 8
 ```
+
+The local Mac fallback, when the vLLM OpenAI HTTP server is blocked by local middleware/version skew, is:
+
+```bash
+python scripts/run-local-vllm-gsm8k-direct.py \
+  --limit 32 \
+  --output runs/local-vllm-gsm8k-public-openai-benchmark.json
+```
+
+The dedicated Kaggle/CUDA public benchmark runner is:
+
+```bash
+python scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py
+```

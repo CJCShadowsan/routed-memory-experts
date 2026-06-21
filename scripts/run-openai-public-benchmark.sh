@@ -81,13 +81,13 @@ PY
 
 mkdir -p "$(dirname "$OUTPUT_PREFIX")"
 
-rme compare-openai-models \
+rme benchmark-public-openai \
   --base-url "$BASE_URL" \
   --base-model "$BASE_MODEL" \
   --expert-model "$EXPERT_MODEL" \
   --workload "$WORKLOAD" \
   --experts "$EXPERTS" \
-  --output "${OUTPUT_PREFIX}-base-vs-adapter.json"
+  --output "${OUTPUT_PREFIX}-public-openai-benchmark.json"
 
 PROOF_ARGS=(
   --base-url "$BASE_URL"

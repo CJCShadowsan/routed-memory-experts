@@ -325,3 +325,27 @@ Claims still not fully proven:
 - No live GSM8K model/adaptor results are claimed yet; running the workload requires a live OpenAI-compatible server.
 - TLDR and PTS adapters are not math-quality candidates. A math-capable adapter should be selected or trained before using GSM8K to claim adapter superiority.
 - Production-scale concurrency still requires an external longer-running GPU/server run.
+
+## Iteration 11 assessment
+
+Status: Ran the public benchmark locally as far as the Mac environment allowed and added a dedicated Kaggle/CUDA runner.
+
+Closeness to ultimate goal: 92%.
+
+Evidence added:
+
+- Added a non-leaky public benchmark command path: `rme benchmark-public-openai`, backed by `src/routed_memory_experts/public_benchmark.py`. Unlike the older proof harness prompt, it does not include `expected_contains` in the model prompt.
+- Added `scripts/run-local-vllm-gsm8k-direct.py` to run GSM8K through vLLM's Python API on the Mac when the OpenAI HTTP server path is unavailable.
+- Ran `scripts/run-local-vllm-gsm8k-direct.py --limit 32`, producing `runs/local-vllm-gsm8k-public-openai-benchmark.json`.
+- Local result: `Qwen/Qwen2.5-0.5B-Instruct` base scored 5/32 and `tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora` scored 3/32. The math LoRA loaded and ran, but did not beat base on this local sample.
+- Added `scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py` to run the same GSM8K public benchmark under CUDA vLLM on Kaggle.
+
+Local blockers discovered:
+
+- The local vLLM OpenAI HTTP server loaded `tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora`, but all HTTP endpoints returned 500 due a local `prometheus_fastapi_instrumentator`/router middleware incompatibility. Direct vLLM Python API bypassed this and produced the local benchmark artifact.
+- The Qwen3 GSM8K adapter candidate `aokesem/qwen3-0.6B_gsm8k_lora` failed local vLLM adapter loading with `StopIteration`, and its checkpoint subpath was not accepted as an adapter.
+
+Claims still not fully proven:
+
+- Adapter quality superiority is still unproven and currently falsified for the tested Qwen2.5 GSM8K LoRA on the 32-item local run.
+- CUDA public benchmark and production-scale concurrency still need the Kaggle/CUDA script output.

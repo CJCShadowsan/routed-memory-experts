@@ -1,0 +1,630 @@
+{
+  "adapter": "tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora",
+  "artifact_family": "public-openai-benchmark",
+  "base_accuracy": 0.15625,
+  "base_correct_count": 5,
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "base_p50_latency_ms": 1710.8351248316467,
+  "base_p95_latency_ms": 2139.4111667759717,
+  "base_url": "local-vllm-python-api",
+  "benchmark": "workloads/gsm8k_public_sample.jsonl",
+  "expert_accuracy": 0.09375,
+  "expert_correct_count": 3,
+  "expert_losses": 4,
+  "expert_model": "math",
+  "expert_p50_latency_ms": 6972.564791794866,
+  "expert_p95_latency_ms": 7790.199707727879,
+  "expert_wins": 2,
+  "records": [
+    {
+      "base_correct": false,
+      "base_latency_ms": 1807.6908341608942,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how much money Janet makes every day at the farmers' market, we need to follow these steps:\n\n1. Calculate the total number of eggs laid by the ducks in a day.\n2. Subtract the number of eggs Janet eats for breakfast and the number of eggs she bakes for her friends.\n3. Subtract the number of eggs she sells at the farmers' market.\n4. Calculate the total revenue from selling the remaining eggs at the farmers' market.\n\nLet's break",
+      "expected_contains": [
+        "18"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7130.298874806613,
+      "expert_model": "math",
+      "expert_response": " To determine how much money Janet makes every day at the farmers' market, we need to calculate the total number of eggs she has and then find out how many eggs she sells at the market.\n\nFirst, let's calculate the total number of eggs she has:\n- Janet's ducks lay 16 eggs per day.\n- She eats 3 eggs for breakfast.\n- She bakes muffins for her friends, which means she bakes 4 muffins per day.\n-",
+      "item_id": "gsm8k-test-0",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1597.1052912063897,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To solve the problem, we need to determine the total number of bolts required for the robe based on the given information.\n\n1. **Identify the number of bolts of blue fiber:**\n   - The problem states that it takes 2 bolts of blue fiber.\n\n2. **Determine the number of bolts of white fiber:**\n   - The problem states that it takes half the amount of white fiber as blue fiber.\n   - Therefore, the number of bolts of white fiber",
+      "expected_contains": [
+        "3"
+      ],
+      "expert_correct": true,
+      "expert_latency_ms": 6476.786666084081,
+      "expert_model": "math",
+      "expert_response": " Step 1: Determine the amount of white fiber needed. Since the robe requires half the amount of white fiber as blue fiber, and the robe needs 2 bolts of blue fiber, the amount of white fiber needed is 2/2 = 1 bolt.\nStep 2: Calculate the total number of bolts needed. The total number of bolts required is the sum of the blue and white fiber, which is 2 + 1 = 3 bolts.\nThe final answer",
+      "item_id": "gsm8k-test-1",
+      "oracle_domain": "math",
+      "outcome": "expert_win",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1736.4765838719904,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine Josh's profit, we need to follow these steps:\n\n1. **Calculate the total cost of the house:**\n   Josh buys the house for $80,000 and puts in $50,000 in repairs.\n   \\[\n   \\text{Total cost} = \\$80,000 + \\$50,000 = \\$130,000\n   \\]\n\n2. **Determine the",
+      "expected_contains": [
+        "70000"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7028.1880418770015,
+      "expert_model": "math",
+      "expert_response": " To determine Josh's profit, we need to follow these steps:\n\n1. Calculate the total cost of the house including repairs.\n2. Determine the increase in the house's value due to the repairs.\n3. Calculate the new value of the house after the repairs.\n4. Find the profit by subtracting the original cost from the new value.\n\nLet's start with the first step:\n\n1. The original cost of the house is $80,000. Josh adds",
+      "item_id": "gsm8k-test-2",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1604.0659579448402,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total distance James runs in a week, we need to follow these steps:\n\n1. Calculate the distance James runs in one sprint.\n2. Multiply the distance of one sprint by the number of sprints he runs in a week.\n\nFirst, we know that James runs 60 meters in each sprint. He runs 3 sprints each week. Therefore, the distance he runs in one week is:\n\\[ 60 \\text{ meters/sprint} \\",
+      "expected_contains": [
+        "540"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6241.27941718325,
+      "expert_model": "math",
+      "expert_response": " To determine the total distance James runs in a week, we need to follow these steps:\n\n1. Calculate the distance James runs in one sprint.\n2. Multiply the distance of one sprint by the number of sprints he runs each week.\n\nFirst, we know that James runs 60 meters in each sprint. He runs 3 sprints each week. Therefore, the distance he runs in one week is:\n\\[ 60 \\text{ meters/sprint} \\times",
+      "item_id": "gsm8k-test-3",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1886.6879576817155,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total amount of feed Wendi needs to give her chickens in the final meal of the day, we will follow these steps:\n\n1. Calculate the total amount of feed given to the chickens in the morning.\n2. Calculate the total amount of feed given to the chickens in the afternoon.\n3. Add the amounts from the morning and afternoon to find the total amount of feed given to the chickens in the final meal.\n4. Multiply the total amount of feed by the",
+      "expected_contains": [
+        "20"
+      ],
+      "expert_correct": true,
+      "expert_latency_ms": 7779.6675423160195,
+      "expert_model": "math",
+      "expert_response": " To determine how many cups of mixed chicken feed Wendi needs to feed her flock in the final meal of the day, we need to follow these steps:\n\n1. Calculate the total amount of feed needed for the morning and afternoon:\n   - In the morning, Wendi gives each chicken 15 cups of feed.\n   - In the afternoon, Wendi gives each chicken 25 cups of feed.\n   - There are 20 chickens in the flock.\n   -",
+      "item_id": "gsm8k-test-4",
+      "oracle_domain": "math",
+      "outcome": "expert_win",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 2415.983541868627,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how much Kylar needs to pay for 16 glasses, we need to calculate the cost of each glass and then sum these costs.\n\n1. **Cost of the first glass:**\n   The first glass costs $5.\n\n2. **Cost of the second glass:**\n   The second glass costs 60% of the price of the first glass. Therefore, the cost of the second glass is:\n   \\[\n   0.60 \\",
+      "expected_contains": [
+        "64"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7790.199707727879,
+      "expert_model": "math",
+      "expert_response": " To determine the total cost of the glasses, we need to calculate the cost of one glass and then multiply by the number of glasses Kylar wants to buy.\n\nFirst, let's find the cost of one glass. According to the problem, one glass costs $5, but every second glass costs only 60% of the price. This means that the cost of one second glass is:\n\\[ 5 \\times 0.60 = 3 \\text{",
+      "item_id": "gsm8k-test-5",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 2782.2195407934487,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total number of sheep on Toulouse, Charleston, and Seattle, we need to follow these steps:\n\n1. **Determine the number of sheep in Seattle:**\n   - Seattle has 20 sheep.\n\n2. **Calculate the number of sheep in Charleston:**\n   - Charleston has 4 times as many sheep as Seattle.\n   - Therefore, the number of sheep in Charleston is:\n     \\[\n     4 \\times 20 = 8",
+      "expected_contains": [
+        "260"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6936.7752922698855,
+      "expert_model": "math",
+      "expert_response": " To determine the total number of sheep on Toulouse, Charleston, and Seattle, we need to follow these steps:\n\n1. **Seattle's Sheep**: We know that Seattle has 20 sheep.\n2. **Charleston's Sheep**: According to the problem, Charleston has 4 times as many sheep as Seattle. Therefore, we calculate the number of sheep in Charleston as follows:\n   \\[\n   \\text{Charleston's Sheep} = 4 \\times \\text",
+      "item_id": "gsm8k-test-6",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1799.8292921110988,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total time it takes for Carla to download the file, we need to break down the problem into manageable parts and calculate the time for each part.\n\n1. **Normal Download Time:**\n   Carla normally downloads the file at a rate of 2 GB/minute. The file size is 200 GB. To find the time it takes to download the file normally, we use the formula:\n   \\[\n   \\text{Time (normal)} = \\",
+      "expected_contains": [
+        "160"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6915.547417011112,
+      "expert_model": "math",
+      "expert_response": " Step 1: Calculate the time Carla spends downloading after the restart.\nSince 40% of the file is downloaded, we need to calculate 40% of 200 GB.\n40% of 200 GB = 0.4 * 200 GB = 80 GB\nSo, Carla downloads 80 GB after the restart.\n\nStep 2: Calculate the time Carla spends downloading after the restart.\nCarla has to",
+      "item_id": "gsm8k-test-7",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1815.8460417762399,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how far John is from home at the end of the 4 hours, we need to calculate the distance he travels in each segment of his journey and then sum these distances.\n\n1. **First Segment:**\n   - John drives for 3 hours at a speed of 60 mph.\n   - Distance = Speed \u00d7 Time = 60 mph \u00d7 3 hours = 180 miles.\n\n2. **Second Segment:**\n   - John spends the",
+      "expected_contains": [
+        "45"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 8346.962832845747,
+      "expert_model": "math",
+      "expert_response": " Round to the nearest whole mile.\nTo determine how far John is from home at the end of the 4 hours, we need to calculate the distance he covers in each part of his journey and then sum these distances.\n\n1. **First part of the journey:**\n   - John drives for 3 hours at a speed of 60 mph.\n   - Distance covered in the first part = 3 hours * 60 mph = 180 miles.\n\n2",
+      "item_id": "gsm8k-test-8",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1712.539749685675,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine Eliza's earnings for the week, we need to calculate her regular earnings and her overtime earnings separately, and then sum them up.\n\n1. **Calculate Eliza's regular earnings:**\n   - Eliza's regular hourly rate is $10.\n   - She worked for 40 hours.\n   - Therefore, her regular earnings are:\n     \\[\n     \\text{Regular earnings} = \\text{Hourly rate} \\times \\text{Hours",
+      "expected_contains": [
+        "460"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6757.368583697826,
+      "expert_model": "math",
+      "expert_response": " To determine Eliza's earnings for the week, we need to calculate her regular earnings and her overtime earnings separately, and then sum them up.\n\nFirst, let's calculate Eliza's regular earnings. Since she works 40 hours at a rate of $10 per hour, her regular earnings are:\n\\[ 40 \\text{ hours} \\times \\$10/\\text{hour} = \\$400 \\]\n\nNext, we calculate her overtime earnings.",
+      "item_id": "gsm8k-test-9",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1660.9325842000544,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total number of downloads over the three months, we will follow these steps:\n\n1. **First Month:**\n   - The program had 60 downloads.\n\n2. **Second Month:**\n   - The number of downloads in the second month was three times the downloads in the first month.\n   - Number of downloads in the second month = 3 * 60 = 180.\n\n3. **Third Month:**\n   - The downloads in",
+      "expected_contains": [
+        "366"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6896.08266716823,
+      "expert_model": "math",
+      "expert_response": " Step 1: Calculate the downloads in the second month.\nThe number of downloads in the second month is three times the downloads in the first month, which is 60 * 3 = 180 downloads.\nStep 2: Calculate the downloads in the third month.\nThe downloads in the third month are reduced by 30% from the downloads in the second month, which is 180 * (1 - 0.3) = 1",
+      "item_id": "gsm8k-test-10",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1710.8351248316467,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total cost of Toula's purchases, we need to calculate the cost of each type of pastry and then sum these costs.\n\n1. **Cost of Donuts:**\n   - Toula bought 3 dozen donuts.\n   - Each dozen donuts cost $68.\n   - Therefore, the total cost for the donuts is:\n     \\[\n     3 \\text{ dozen} \\times 68 \\text{ dollars/dozen} =",
+      "expected_contains": [
+        "694"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6613.661332987249,
+      "expert_model": "math",
+      "expert_response": " To determine the total cost of Toula's purchases, we need to calculate the cost of each type of pastry and then sum these costs.\n\n1. **Calculate the cost of the donuts:**\n   Toula bought 3 dozen donuts, and each dozen costs $68.\n   \\[\n   \\text{Cost of donuts} = 3 \\times 68 = 204 \\text{ dollars}\n   \\]\n\n2. **Calculate the",
+      "item_id": "gsm8k-test-11",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1777.6797083206475,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how many years it will take for Carlos to start earning money from the lemon tree, we need to calculate the net profit per year and then find out how many years it will take to cover the initial cost of planting the tree.\n\n1. **Initial Cost of Planting the Tree:**\n   The cost to plant the tree is $90.\n\n2. **Net Profit per Year:**\n   Each year, the tree grows 7 lemons, and he can",
+      "expected_contains": [
+        "13"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6988.971499726176,
+      "expert_model": "math",
+      "expert_response": " To determine how many years it will take for Carlos to start earning money from the lemon tree, we need to calculate the net profit from the tree each year and then find out how many years it will take to cover the initial cost of planting the tree.\n\n1. **Calculate the net profit per year:**\n   - The tree grows 7 lemons each year.\n   - Each lemon is sold for $1.5.\n   - Therefore, the net profit per year is",
+      "item_id": "gsm8k-test-12",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1704.7359999269247,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " Let's denote the total number of vacuum cleaners Melanie started with as \\( x \\).\n\n1. Melanie sold a third of her vacuum cleaners at the green house. So, she sold \\( \\frac{x}{3} \\) vacuum cleaners at the green house.\n2. She sold 2 more vacuum cleaners at the red house. So, she sold \\( \\frac{x}{3} + 2 \\) vacuum cleaners at the red house.\n3. She sold half of what",
+      "expected_contains": [
+        "18"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6624.511041678488,
+      "expert_model": "math",
+      "expert_response": " Let's denote the total number of vacuum cleaners Melanie had initially as \\( x \\).\n\nAccording to the problem, Melanie sold a third of her vacuum cleaners at the green house, which is \\( \\frac{x}{3} \\). She then sold 2 more vacuum cleaners at the red house, so the number of vacuum cleaners left after the red house is \\( x - \\frac{x}{3} - 2 \\).\n\nAfter that, she sold half of the remaining vacuum cleaners",
+      "item_id": "gsm8k-test-13",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1662.8115829080343,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the percentage of students enrolled in hip-hop dance, we will follow these steps:\n\n1. Calculate the number of students enrolled in contemporary dance.\n2. Determine the number of students remaining after subtracting those in contemporary dance.\n3. Calculate the number of students enrolled in jazz dance from the remaining students.\n4. Find the number of students enrolled in hip-hop dance by subtracting the number of students in jazz dance from the total number of students.\n5. Calculate the percentage",
+      "expected_contains": [
+        "60"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6595.360917039216,
+      "expert_model": "math",
+      "expert_response": " Step 1: Calculate the number of students enrolled in contemporary dance.\n20% of 20 students = 0.20 * 20 = 4 students\nRemaining students = 20 - 4 = 16 students\nStep 2: Calculate the number of students enrolled in jazz dance.\n25% of 16 students = 0.25 * 16 = 4 students\nRemaining students = 16 -",
+      "item_id": "gsm8k-test-14",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": true,
+      "base_latency_ms": 1825.3926667384803,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the profit the merchant would make, we need to calculate the expected profit from each purchase plan and then compare them.\n\n1. **Calculate the expected profit from the jewelry purchase:**\n   - The jewelry market will increase by 2.5%.\n   - The original price of the jewelry is $5,000.\n   - The expected increase in price is \\(5000 \\times 0.025 = 125\\).\n",
+      "expected_contains": [
+        "125"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 8204.018500167876,
+      "expert_model": "math",
+      "expert_response": " To determine the profit the merchant would make by choosing between the jewelry and electronic gadgets, we need to calculate the profit for each plan and then compare them.\n\n1. **Calculate the profit for the jewelry plan:**\n   - The jewelry is worth $5,000.\n   - The jewelry market will increase by 2.5%.\n   - The increase in the jewelry market is calculated as:\n     \\[\n     5000 \\times 0.",
+      "item_id": "gsm8k-test-15",
+      "oracle_domain": "math",
+      "outcome": "expert_loss",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1676.7631247639656,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the distance covered by each train in the two days, we need to consider the following:\n\n1. The first train travels westward for 80 miles.\n2. The second train travels northward for 150 miles.\n\nSince the problem does not specify the speed of the trains, we will assume that the trains are traveling at a constant speed. The distance covered by each train in the two days is the sum of the distances they traveled westward and north",
+      "expected_contains": [
+        "230"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6598.429459147155,
+      "expert_model": "math",
+      "expert_response": " To determine the distance covered by each train in the two days, we need to calculate the distance each train travels in the first day and then in the second day.\n\n1. **First Day Calculation:**\n   - The first train travels 80 miles westward.\n   - The second train travels 150 miles northward.\n   - The total distance covered by each train in the first day is the sum of the distances traveled by each train:\n     \\[\n    ",
+      "item_id": "gsm8k-test-16",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1683.0802499316633,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To calculate Jill's annual salary, we need to consider her earnings from both her teaching and coaching roles.\n\nFirst, let's calculate her earnings from the teaching role:\n- She works 35 hours per week as a teacher.\n- She works 50 weeks per year.\n- Her hourly wage for teaching is $20.\n\nEarnings from teaching = Hours worked per week * Hours per week * Hourly wage\nEarnings from teaching = 35 hours/week",
+      "expected_contains": [
+        "57500"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6972.564791794866,
+      "expert_model": "math",
+      "expert_response": " To determine Jill's annual salary, we need to calculate her earnings from both her teaching and coaching positions and then sum them up.\n\nFirst, let's calculate her earnings from teaching:\n- She works 50 weeks a year.\n- She works 35 hours a week as a teacher.\n- She earns $20 per hour.\n- Therefore, her weekly earnings from teaching are \\(35 \\text{ hours/week} \\times \\$20/\\text{hour",
+      "item_id": "gsm8k-test-17",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1637.5217498280108,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how many dozens of eggs Claire will eat in 4 weeks, we need to follow these steps:\n\n1. Calculate the number of days in 4 weeks.\n2. Determine how many eggs Claire uses in one day.\n3. Calculate the total number of eggs Claire uses in 4 weeks.\n4. Convert the total number of eggs into dozens.\n\nFirst, let's find out how many days are in 4 weeks:\n\\[ 4 \\text{ weeks} \\",
+      "expected_contains": [
+        "7"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6468.958333134651,
+      "expert_model": "math",
+      "expert_response": " To determine how many dozens of eggs Claire will eat in 4 weeks, we need to follow these steps:\n\n1. Calculate the number of eggs Claire eats in one day.\n2. Calculate the number of eggs Claire eats in one week.\n3. Calculate the number of eggs Claire eats in four weeks.\n4. Convert the weekly egg consumption into dozens.\n\nFirst, we know that Claire makes 3 eggs for breakfast each morning. So, in one day, she eats 3",
+      "item_id": "gsm8k-test-18",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1788.5118331760168,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the speed Marissa needs to walk the remaining distance, we first need to calculate the total time she took to complete the hike.\n\nMarissa took 1 hour to walk the first 4 miles and another 1 hour to walk the next 2 miles. Therefore, the total time taken is:\n\\[ 1 \\text{ hour} + 1 \\text{ hour} = 2 \\text{ hours} \\]\n\nNext, we need to find out how",
+      "expected_contains": [
+        "6"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7168.961834162474,
+      "expert_model": "math",
+      "expert_response": " To determine the speed Marissa needs to walk the remaining distance, we first need to calculate the total time she has spent hiking so far. She has already hiked 4 miles in 1 hour, and then another 2 miles in 1 hour. Therefore, the total time spent hiking so far is:\n\n\\[ 1 \\text{ hour} + 1 \\text{ hour} = 2 \\text{ hours} \\]\n\nSince the total distance of the trail",
+      "item_id": "gsm8k-test-19",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": true,
+      "base_latency_ms": 1701.6130001284182,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To solve this problem, we need to follow these steps:\n\n1. Calculate the amount of water in the initial 10 liters of orange drink.\n2. Calculate the amount of water in the 15 liters of pineapple drink.\n3. Determine the total amount of water in the initial mixture before the spill.\n4. Subtract the spilled 1 liter of orange drink from the total amount of water.\n5. Calculate the amount of water left in the remaining 24 liters",
+      "expected_contains": [
+        "15"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7095.909000374377,
+      "expert_model": "math",
+      "expert_response": " To solve this problem, let's break it down step by step.\n\n1. First, we need to determine the amount of water in the orange drink after the spill. The orange drink is initially two-thirds water, and we spill one liter of it. So, the amount of water left in the orange drink is:\n   10 liters - 1 liter = 9 liters\n\n2. Now, we need to calculate the total amount of water in the orange drink after",
+      "item_id": "gsm8k-test-20",
+      "oracle_domain": "math",
+      "outcome": "expert_loss",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1653.2167503610253,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how many years ago Raymond's son was born, we need to follow these steps:\n\n1. **Determine the age of Samantha when her son was born:**\n   - Samantha is currently 31 years old.\n   - Raymond was born 6 years before Samantha.\n   - Therefore, Samantha was 6 years old when her son was born.\n\n2. **Calculate the age of Raymond's son at the time of Samantha's birth:**\n   - Samantha was",
+      "expected_contains": [
+        "14"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6811.237916816026,
+      "expert_model": "math",
+      "expert_response": " Step 1: Determine the age of Samantha's son.\nSince Samantha is now 31 years old, and Raymond was born 6 years before Samantha, Samantha's son is 31 - 6 = 25 years old.\nStep 2: Determine the age of Raymond's son.\nRaymond had a son at the age of 23, so the son is 25 - 23 = 2 years old.\nStep 3: Determine",
+      "item_id": "gsm8k-test-21",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 2139.4111667759717,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total number of DVDs Billy sold on Tuesday, we need to calculate the number of DVDs sold to each group of customers and then sum these amounts.\n\n1. **First 3 customers**: Each of these 3 customers buys one DVD. Therefore, the number of DVDs sold to these customers is:\n   \\[\n   3 \\text{ customers} \\times 1 \\text{ DVD/customer} = 3 \\text{ DVDs}\n   \\]\n\n2.",
+      "expected_contains": [
+        "7"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7199.622958898544,
+      "expert_model": "math",
+      "expert_response": " Step 1: Calculate the number of DVDs sold to the first 3 customers.\nBilly has 8 customers on Tuesday, and the first 3 customers buy one DVD each. So, the first 3 customers buy a total of 3 DVDs.\nStep 2: Calculate the number of DVDs sold to the next 2 customers.\nBilly has 8 customers on Tuesday, and the next 2 customers buy 2 DVDs each. So, the next 2 customers buy",
+      "item_id": "gsm8k-test-22",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": true,
+      "base_latency_ms": 1665.9661661833525,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how many centimeters shorter a candle will be after burning from 1:00 PM to 5:00 PM, we need to follow these steps:\n\n1. Calculate the total time the candle burns.\n2. Determine the total length of the candle that melts.\n3. Subtract the melted length from the original length of the candle.\n\nFirst, let's calculate the total time the candle burns. The question states that the candle burns for 8 hours (from",
+      "expected_contains": [
+        "8"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6465.5836671590805,
+      "expert_model": "math",
+      "expert_response": " To determine how much the candle will be shorter after burning from 1:00 PM to 5:00 PM, we need to calculate the total melting length of the candle over this period.\n\n1. **Determine the total time the candle burns:**\n   - The burning time is from 1:00 PM to 5:00 PM, which is 4 hours.\n\n2. **Calculate the total melting length:**\n   - The candle melts",
+      "item_id": "gsm8k-test-23",
+      "oracle_domain": "math",
+      "outcome": "expert_loss",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1619.1317080520093,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To find the original price of the book, we need to work backwards from the discounted price. The discounted price is $19.50, which is 75% of the original price because a 25% discount means the book is now 75% of its original price.\n\nLet's denote the original price as \\( P \\).\n\nThe relationship between the original price and the discounted price can be expressed as:\n\\[ \\text{Discounted Price} =",
+      "expected_contains": [
+        "26"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6445.538999978453,
+      "expert_model": "math",
+      "expert_response": " Round to the nearest cent.\nAnswer: To find the original price of the book, we need to subtract the discount from the current price.\nThe discount is 25% of $19.50, which is 0.25 * $19.50 = $4.875.\nSubtracting the discount from the current price gives us $19.50 - $4.875 = $14.62",
+      "item_id": "gsm8k-test-24",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": true,
+      "base_latency_ms": 1732.3160828091204,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how many boxes of pizza Marie ordered, we need to break down the total cost of the items she ordered and set it equal to the total amount she paid.\n\nFirst, let's calculate the cost of the chicken meal:\n\\[ \\text{Cost of chicken meal} = \\$12 \\]\n\nNext, we calculate the total cost of the milk packs:\n\\[ \\text{Cost of milk packs} = 5 \\times \\$3 = \\$15 \\]\n\nThen",
+      "expected_contains": [
+        "2"
+      ],
+      "expert_correct": true,
+      "expert_latency_ms": 7593.2034580037,
+      "expert_model": "math",
+      "expert_response": " To determine how many boxes of pizza Marie ordered, we need to calculate the total cost of the items she ordered and then subtract that from the total amount she paid.\n\nFirst, let's calculate the cost of the chicken meal:\n\\[ 12 \\text{ dollars} \\]\n\nNext, let's calculate the cost of the milk:\n\\[ 5 \\text{ packs} \\times 3 \\text{ dollars per pack} = 15 \\text{ dollars} \\",
+      "item_id": "gsm8k-test-25",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1738.7814172543585,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the total cost of the clothing items Mishka bought, we need to calculate the cost of each type of clothing and then sum these costs.\n\n1. **Cost of shorts:**\n   Mishka bought 3 pairs of shorts.\n   \\[\n   \\text{Cost of shorts} = 3 \\times 16.50 = 49.50\n   \\]\n\n2. **Cost of pants:**\n   Mishka bought 3 pairs",
+      "expected_contains": [
+        "243"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7167.730916757137,
+      "expert_model": "math",
+      "expert_response": " To determine the total cost of the clothing Mishka bought, we need to calculate the cost of each type of clothing and then sum these costs.\n\nFirst, let's calculate the cost of the shorts:\n- Mishka bought 3 pairs of shorts.\n- Each pair of shorts costs $16.50.\n- Therefore, the total cost for the shorts is \\(3 \\times 16.50 = 50.50\\).\n\nNext, let's",
+      "item_id": "gsm8k-test-26",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1712.5105829909444,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine how much Cynthia will spend on ice cream over 60 days, we need to follow these steps:\n\n1. Calculate the total number of servings of ice cream Cynthia eats in 60 days.\n2. Determine the cost of the ice cream based on the number of servings and the cost per serving.\n\nFirst, we calculate the total number of servings Cynthia eats in 60 days. Since she eats one serving every night and there are 60 days in a",
+      "expected_contains": [
+        "16"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7031.9918328896165,
+      "expert_model": "math",
+      "expert_response": " To determine how much Cynthia will spend on ice cream after 60 days, we need to follow these steps:\n\n1. **Calculate the total number of servings Cynthia eats in 60 days:**\n   - Cynthia eats one serving per night.\n   - There are 24 hours in a day.\n   - There are 60 days in a week.\n   - Therefore, in one week, she eats \\(24 \\times 60 = 14",
+      "item_id": "gsm8k-test-27",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1702.799207996577,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the number of miles Henry traveled between his first and second stops, we need to follow these steps:\n\n1. Identify the total distance of the trip.\n2. Identify the distance of the first stop.\n3. Identify the distance of the second stop.\n4. Calculate the distance between the first and second stops by subtracting the distance of the first stop from the distance of the second stop.\n\nThe total distance of the trip is 60 miles. The first stop is",
+      "expected_contains": [
+        "25"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7244.010541122407,
+      "expert_model": "math",
+      "expert_response": " To determine how many miles Henry traveled between his first and second stops, we need to follow these steps:\n\n1. Calculate the distance of the second stop.\n2. Subtract the distance of the second stop from the total distance of the trip.\n\nFirst, we know that Henry's second stop was 15 miles before the end of the trip. Since the total trip is 60 miles, the distance of the second stop is:\n\\[ 60 \\text{ miles}",
+      "item_id": "gsm8k-test-28",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1769.661583006382,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To determine the cost of the boots, we start by defining the variables for the costs of the boots and the high heels. Let \\( B \\) represent the cost of the boots. According to the problem, the cost of the high heels is \\( 2 \\times 33 = 66 \\) dollars. The total cost of the boots and the high heels together is $5 less than the cost of the boots. This can be expressed with the equation:\n\n\\[",
+      "expected_contains": [
+        "104"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7549.571374896914,
+      "expert_model": "math",
+      "expert_response": " To determine the cost of the boots, we first need to find out how much the high heels cost. We know that one pair of heels costs $33 and the other costs twice as much, which is $66. Therefore, the total cost of the high heels is $33 + $66 = $99.\n\nThe total cost of the boots and the high heels together is $5 less than the boots, which means the boots cost $5 more than",
+      "item_id": "gsm8k-test-29",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 1674.594999756664,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To solve the problem, we first need to determine Darrell's and Allen's current ages based on the given ratio and the total age.\n\n1. **Determine the ratio and total age:**\n   The ratio of Darrell's age to Allen's age is 7:11. This means for every 7 parts Darrell has, Allen has 11 parts. The total parts of the ratio are \\(7 + 11 = 18\\).\n\n",
+      "expected_contains": [
+        "109"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 6502.452457789332,
+      "expert_model": "math",
+      "expert_response": " Let's denote Darrell's age as \\( D \\) and Allen's age as \\( A \\). According to the problem, the ratio of their ages is 7:11, which can be written as:\n\\[ \\frac{D}{A} = \\frac{7}{11} \\]\nThis implies:\n\\[ D = \\frac{7}{11}A \\]\nThe total age of Darrell and Allen is given as 162,",
+      "item_id": "gsm8k-test-30",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": true,
+      "base_latency_ms": 1684.5334591344,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": " To find the average guess of Gunter's friends, we first need to calculate the number of jelly beans each friend guessed for and then find the average of these guesses.\n\n1. The first friend guessed 80 jelly beans.\n2. The second friend guessed 20 more than half the first one. Half of 80 is 40, so the second friend guessed 40 + 20 = 60 jelly beans.\n3. The third friend",
+      "expected_contains": [
+        "80"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 7111.676416825503,
+      "expert_model": "math",
+      "expert_response": " To determine the average guess of the jelly beans in the jar, we need to follow these steps:\n\n1. Identify the number of jelly beans each friend thinks is in the jar.\n2. Calculate the total number of jelly beans guessed by all friends.\n3. Find the average of the guesses.\n\nFirst, let's find out how many jelly beans the third friend thinks are in the jar. The third friend says 25% more than the first friend. The first friend thinks",
+      "item_id": "gsm8k-test-31",
+      "oracle_domain": "math",
+      "outcome": "expert_loss",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    }
+  ],
+  "ties": 26,
+  "workload_count": 32
+}

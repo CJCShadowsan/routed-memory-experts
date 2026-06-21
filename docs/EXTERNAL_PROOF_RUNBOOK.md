@@ -116,6 +116,28 @@ scripts/run-openai-public-benchmark.sh \
 
 The script writes comparison, proof, concurrency, validation, and gap-ledger artifacts under `runs/`. For adapter-quality claims, replace `--expert-model tldr` with a math-capable adapter served by the same base model; TLDR/PTS remain serving-mechanics adapters, not math-quality candidates.
 
+For the currently selected math candidate on Kaggle/CUDA, use the dedicated script:
+
+```bash
+%cd /kaggle/working
+!rm -rf routed-memory-experts
+!git clone https://github.com/CJCShadowsan/routed-memory-experts.git
+%cd routed-memory-experts
+!python scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py
+```
+
+This serves `Qwen/Qwen2.5-0.5B-Instruct` with `tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora`, runs the non-leaky GSM8K public benchmark command, a routed mechanics proof, concurrency, proof-gap summarization, and artifact validation.
+
+Local Mac fallback when the OpenAI HTTP server path is blocked:
+
+```bash
+python scripts/run-local-vllm-gsm8k-direct.py \
+  --limit 32 \
+  --output runs/local-vllm-gsm8k-public-openai-benchmark.json
+```
+
+The current local direct-vLLM result is intentionally not a quality win: base accuracy was 5/32 and adapter accuracy was 3/32.
+
 ## Folding external artifacts back into the paper
 
 After copying external artifacts locally:

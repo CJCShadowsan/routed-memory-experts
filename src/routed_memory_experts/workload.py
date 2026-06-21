@@ -12,7 +12,19 @@ def load_workload(path: str | Path) -> List[WorkloadItem]:
             if not line: continue
             data=json.loads(line)
             try:
-                items.append(WorkloadItem(id=str(data["id"]), domain=str(data["domain"]), prompt=str(data["prompt"]), expected_contains=[str(x).lower() for x in data["expected_contains"]], risk=str(data.get("risk","normal"))))
+                items.append(
+                    WorkloadItem(
+                        id=str(data["id"]),
+                        domain=str(data["domain"]),
+                        prompt=str(data["prompt"]),
+                        expected_contains=[str(x).lower() for x in data["expected_contains"]],
+                        risk=str(data.get("risk", "normal")),
+                        source=str(data.get("source", "unknown")),
+                        split=str(data.get("split", "unknown")),
+                        provenance_url=str(data.get("provenance_url", "unknown")),
+                        license=str(data.get("license", "unknown")),
+                    )
+                )
             except KeyError as exc:
                 raise ValueError(f"{path}:{line_no}: missing required field {exc}") from exc
     if not items: raise ValueError(f"workload {path} is empty")

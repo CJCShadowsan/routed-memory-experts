@@ -17,6 +17,7 @@ from .openai_backend import (
 )
 from .proof import run_proof, summary_to_dict
 from .proof_gap import summarize_proof_gaps
+from .public_benchmark import public_benchmark_summary_to_dict, run_public_openai_benchmark
 from .runtime_readiness import check_runtime_readiness, runtime_readiness_to_dict
 
 
@@ -65,6 +66,15 @@ def main(argv: list[str] | None = None) -> int:
     compare_openai.add_argument("--experts", required=True)
     compare_openai.add_argument("--output", default="runs/openai-model-comparison.json")
     compare_openai.add_argument("--limit", type=int, default=None)
+
+    public_openai = sub.add_parser("benchmark-public-openai", help="compare base and expert models on a public benchmark without leaking labels in prompts")
+    public_openai.add_argument("--base-url", default="http://127.0.0.1:8000/v1")
+    public_openai.add_argument("--base-model", required=True)
+    public_openai.add_argument("--expert-model", required=True)
+    public_openai.add_argument("--workload", required=True)
+    public_openai.add_argument("--experts", required=True)
+    public_openai.add_argument("--output", default="runs/public-openai-benchmark.json")
+    public_openai.add_argument("--limit", type=int, default=None)
 
     concurrency = sub.add_parser("benchmark-openai-concurrency", help="measure concurrent OpenAI-compatible routed serving")
     concurrency.add_argument("--base-url", default="http://127.0.0.1:8000/v1")
@@ -149,6 +159,13 @@ def main(argv: list[str] | None = None) -> int:
         data = openai_comparison_summary_to_dict(summary)
         print(json.dumps({k: v for k, v in data.items() if k != "records"}, indent=2, sort_keys=True))
         print("PASS: OpenAI-compatible model comparison completed")
+        return 0
+
+    if args.command == "benchmark-public-openai":
+        summary = run_public_openai_benchmark(args.workload, args.experts, args.base_url, args.base_model, args.expert_model, args.output, args.limit)
+        data = public_benchmark_summary_to_dict(summary)
+        print(json.dumps({k: v for k, v in data.items() if k != "records"}, indent=2, sort_keys=True))
+        print("PASS: public OpenAI-compatible benchmark completed")
         return 0
 
     if args.command == "benchmark-openai-concurrency":

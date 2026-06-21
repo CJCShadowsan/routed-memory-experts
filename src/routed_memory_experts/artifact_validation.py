@@ -16,6 +16,7 @@ SCHEMAS: dict[str, set[str]] = {
     "concurrency": {"base_url", "model", "request_count", "concurrency", "success_count", "error_count", "records"},
     "models": {"object", "data"},
     "proof-gap-ledger": {"artifact_family", "completion_score", "gap_count", "open_gap_count", "gaps"},
+    "public-openai-benchmark": {"artifact_family", "benchmark", "workload_count", "base_model", "expert_model", "base_accuracy", "expert_accuracy", "records"},
 }
 
 
@@ -29,6 +30,8 @@ class ArtifactValidationResult:
 
 def infer_family(path: Path, data: dict) -> str:
     name = path.name
+    if data.get("artifact_family") == "public-openai-benchmark" or "public-openai-benchmark" in name:
+        return "public-openai-benchmark"
     if "model-comparison" in name or {"base_model", "expert_model"} <= data.keys():
         return "openai-comparison"
     if "concurrency" in name or {"request_count", "concurrency", "success_count"} <= data.keys():

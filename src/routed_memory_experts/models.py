@@ -16,6 +16,10 @@ class WorkloadItem:
     prompt: str
     expected_contains: List[str]
     risk: str = "normal"
+    source: str = "unknown"
+    split: str = "unknown"
+    provenance_url: str = "unknown"
+    license: str = "unknown"
 
 @dataclass
 class Expert:
