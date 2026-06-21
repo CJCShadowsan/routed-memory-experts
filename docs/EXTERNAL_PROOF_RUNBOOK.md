@@ -28,7 +28,15 @@ rme summarize-proof-gaps --runs runs --output runs/proof-gap-ledger.json
 
 ### Phase A: Public benchmark selection
 
-Before claiming public benchmark performance, pick a benchmark with:
+The selected initial public benchmark is GSM8K:
+
+- Source: `openai/gsm8k`.
+- Provenance: https://huggingface.co/datasets/openai/gsm8k
+- License: MIT.
+- Local converted sample: `workloads/gsm8k_public_sample.jsonl`.
+- Builder: `scripts/build-gsm8k-public-workload.py`.
+
+Before claiming broader public benchmark performance, any additional benchmark should have:
 
 - compatible license for redistribution or a documented download step;
 - stable split/version;
@@ -94,19 +102,19 @@ runs/kaggle-vllm-startup-v0-xformers.log
 
 ## External public benchmark/capacity run
 
-Once you have a reviewed benchmark workload JSONL and a live OpenAI-compatible server, use:
+Once you have a live OpenAI-compatible server, run the selected GSM8K sample with:
 
 ```bash
 scripts/run-openai-public-benchmark.sh \
   --base-url http://127.0.0.1:8000/v1 \
   --base-model Qwen/Qwen3-0.6B \
   --expert-model tldr \
-  --workload workloads/public_benchmark.jsonl \
+  --workload workloads/gsm8k_public_sample.jsonl \
   --requests 1000 \
   --concurrency 8
 ```
 
-The script writes comparison, proof, concurrency, validation, and gap-ledger artifacts under `runs/`.
+The script writes comparison, proof, concurrency, validation, and gap-ledger artifacts under `runs/`. For adapter-quality claims, replace `--expert-model tldr` with a math-capable adapter served by the same base model; TLDR/PTS remain serving-mechanics adapters, not math-quality candidates.
 
 ## Folding external artifacts back into the paper
 

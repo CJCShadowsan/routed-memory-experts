@@ -17,6 +17,7 @@ The project treats the thesis as falsifiable engineering work. Every supported c
 - `src/routed_memory_experts/` — executable proof harness.
 - `workloads/real_world_v1.jsonl` — original domain-diverse workload fixture.
 - `workloads/benchmark_expanded_v1.jsonl` — larger deterministic benchmark fixture.
+- `workloads/gsm8k_public_sample.jsonl` — 64-item MIT-licensed GSM8K public benchmark sample converted for the proof harness.
 - `adapters/vllm_metal_manifest.json` — current adapter route manifest.
 - `scripts/` — reproducibility scripts.
 - `runs/` — proof artifacts.
@@ -103,3 +104,27 @@ With a Kaggle GPU notebook and internet enabled:
 ```
 
 The successful proof writes `runs/cuda-vllm-models.json`, `runs/cuda-vllm-tldr-proof.json`, `runs/cuda-vllm-pts-proof.json`, `runs/cuda-vllm-base-vs-tldr.json`, and `runs/cuda-vllm-concurrency.json`.
+
+## Public benchmark workload
+
+The selected initial public benchmark is GSM8K. Regenerate the committed 64-item test sample with:
+
+```bash
+python scripts/build-gsm8k-public-workload.py \
+  --output workloads/gsm8k_public_sample.jsonl \
+  --split test \
+  --offset 0 \
+  --limit 64
+```
+
+Run it against a live OpenAI-compatible server with:
+
+```bash
+scripts/run-openai-public-benchmark.sh \
+  --base-url http://127.0.0.1:8000/v1 \
+  --base-model Qwen/Qwen3-0.6B \
+  --expert-model tldr \
+  --workload workloads/gsm8k_public_sample.jsonl \
+  --requests 1000 \
+  --concurrency 8
+```

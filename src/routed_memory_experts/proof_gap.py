@@ -122,7 +122,7 @@ def summarize_proof_gaps(runs_path: str | Path = "runs", output_path: str | Path
             status="proven" if adapter_win else "external_required",
             evidence=["runs/*base-vs*.json"] if adapter_win else ["runs/cuda-vllm-base-vs-tldr.json", "runs/vllm-metal-base-vs-lora.json"],
             remaining="Current public adapters prove serving mechanics; CUDA base-vs-TLDR tied on six items.",
-            next_action="Find/train compatible domain adapters and run a >=30 item public benchmark comparison.",
+            next_action="Use workloads/gsm8k_public_sample.jsonl with a math-capable adapter, or another reviewed public benchmark with a matching adapter, and run a >=30 item comparison.",
         )
     )
 

@@ -1,0 +1,11 @@
+{
+  "name": "math-expert",
+  "domain": "math",
+  "facts": {
+    "how much": "Math expert: identify the quantities, compute step by step, and end with the final numeric answer.",
+    "how many": "Math expert: track units carefully, do the arithmetic explicitly, and end with the final numeric answer.",
+    "total": "Math expert: combine the relevant quantities, show the calculation, and end with the final numeric answer.",
+    "difference": "Math expert: subtract the compared quantities carefully and end with the final numeric answer."
+  },
+  "default_response": "Math expert: solve the word problem step by step and end with the final numeric answer."
+}

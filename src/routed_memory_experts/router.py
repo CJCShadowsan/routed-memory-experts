@@ -12,6 +12,7 @@ DEFAULT_RULES=(
     DomainRule("python", ("python","pytest","decorator","generator","asyncio","dict","list")),
     DomainRule("finance", ("npv","dcf","discount rate","cash flow","ebitda","wacc","terminal value")),
     DomainRule("medical-literature", ("pubmed","randomized","cohort","hazard ratio","confidence interval","systematic review")),
+    DomainRule("math", ("how many", "how much", "total", "sum", "difference", "product", "percent", "%", "ratio", "per", "each", "times", "mile", "hour", "minute", "pound", "feet", "discount", "cost", "paid", "$")),
     DomainRule("security", ("cve","xss","csrf","sql injection","threat model","rce")),
 )
 

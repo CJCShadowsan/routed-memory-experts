@@ -35,6 +35,20 @@ Optional fields:
 - Do not hide ties: if base and adapter tie, report a tie.
 - Do not redistribute benchmark items unless the license permits it.
 
+## Selected initial public benchmark: GSM8K
+
+The first reviewed public benchmark for the next external run is GSM8K (Grade School Math 8K):
+
+- Dataset: `openai/gsm8k` on Hugging Face.
+- Provenance: https://huggingface.co/datasets/openai/gsm8k
+- License: MIT, as declared by the Hugging Face dataset card.
+- Split: `test`.
+- Task shape: grade-school math word problems with final numeric answers marked after `####`.
+- RME conversion: `scripts/build-gsm8k-public-workload.py` extracts the final numeric answer and writes `expected_contains` for the existing exact-evidence scorer.
+- Current sample: `workloads/gsm8k_public_sample.jsonl`, 64 records from test offset 0.
+
+This benchmark satisfies the workload metadata contract and is appropriate for public benchmark smoke/comparison runs. It does **not** by itself prove TLDR/PTS adapter superiority; a math-capable adapter should be selected before making adapter-quality claims.
+
 ## Current status
 
-The current repo has public-runtime proof artifacts, but not public benchmark performance artifacts. The next external run should use `scripts/run-openai-public-benchmark.sh` with a reviewed workload JSONL and a live server.
+The current repo now includes a reviewed public benchmark sample workload, but not live public benchmark performance artifacts. The next external run should use `scripts/run-openai-public-benchmark.sh` with `workloads/gsm8k_public_sample.jsonl` and a live server.

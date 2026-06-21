@@ -300,3 +300,28 @@ Claims still not fully proven:
 - Production-scale serving is not proven: Kaggle T4 is a hosted free notebook environment with small request counts and limited runtime control.
 - Broad public benchmark validation remains future work.
 - Metal CPU LoRA cache tiering remains unsupported by vLLM-Metal even though CUDA vLLM supports the analogous configuration.
+
+## Iteration 10 assessment
+
+Status: Identified and converted the first reviewed public benchmark workload.
+
+Closeness to ultimate goal: 91%.
+
+Evidence added:
+
+- Selected GSM8K (`openai/gsm8k`) as the first reviewed public benchmark target because it has a public Hugging Face dataset card, MIT license metadata, stable train/test splits, and final numeric answers marked in the source answers.
+- Added `scripts/build-gsm8k-public-workload.py`, which fetches rows from the Hugging Face datasets-server API and converts final answers after `####` into the existing `expected_contains` scorer format.
+- Added `workloads/gsm8k_public_sample.jsonl`, a 64-item test-split sample with `source`, `license`, `provenance_url`, `split`, `domain`, `prompt`, `expected_contains`, `answer`, and `scorer` metadata.
+- Added `experts/math.json` and math routing keywords so every committed GSM8K sample item routes to the `math` domain.
+- Updated `docs/PUBLIC_BENCHMARK_CONTRACT.md`, `docs/EXTERNAL_PROOF_RUNBOOK.md`, `docs/ADAPTER_CANDIDATES.md`, and `README.md` with the selected benchmark and run commands.
+
+Claims additionally supported:
+
+- The project now has a concrete reviewed public benchmark workload ready for live OpenAI-compatible base-vs-adapter and concurrency runs.
+- The public benchmark workload satisfies the repository metadata contract and can be regenerated from public source data.
+
+Claims still not fully proven:
+
+- No live GSM8K model/adaptor results are claimed yet; running the workload requires a live OpenAI-compatible server.
+- TLDR and PTS adapters are not math-quality candidates. A math-capable adapter should be selected or trained before using GSM8K to claim adapter superiority.
+- Production-scale concurrency still requires an external longer-running GPU/server run.
