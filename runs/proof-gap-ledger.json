@@ -1,0 +1,98 @@
+{
+  "artifact_family": "proof-gap-ledger",
+  "blocked_upstream_count": 1,
+  "completion_score": 0.6389,
+  "external_required_count": 2,
+  "gap_count": 9,
+  "gaps": [
+    {
+      "claim": "Deterministic routing, cache tiers, and baseline comparison are executable.",
+      "evidence": [
+        "runs/proof.json",
+        "runs/benchmark-proof.json"
+      ],
+      "next_action": "Keep as regression gate in scripts/run-local-proofs.sh.",
+      "remaining": "None for the CI-safe control-plane proof.",
+      "status": "proven"
+    },
+    {
+      "claim": "1,000-agent locality simulation supports the hot-set premise.",
+      "evidence": [
+        "runs/fleet.json"
+      ],
+      "next_action": "Use production traces or a public trace if one becomes available.",
+      "remaining": "Needs real production traces before claiming traffic realism.",
+      "status": "proven"
+    },
+    {
+      "claim": "Learned routing can beat keyword routing on synonym-heavy prompts.",
+      "evidence": [
+        "runs/router-comparison.json"
+      ],
+      "next_action": "Build or adapt a public labeled routing benchmark.",
+      "remaining": "Needs larger public benchmark routing labels before publication-grade claims.",
+      "status": "proven"
+    },
+    {
+      "claim": "A real local neural backend can consume routed specialist context.",
+      "evidence": [
+        "runs/ollama-proof.json"
+      ],
+      "next_action": "Keep separate from LoRA claims in paper wording.",
+      "remaining": "Context injection is not adapter-weight specialization.",
+      "status": "proven"
+    },
+    {
+      "claim": "Apple Silicon vLLM-Metal can serve multiple LoRA adapters.",
+      "evidence": [
+        "runs/vllm-metal-multi-lora-models.json",
+        "runs/vllm-metal-manifest-proof.json"
+      ],
+      "next_action": "Track upstream vLLM-Metal support or design a Metal-specific tiering alternative.",
+      "remaining": "Metal still does not implement CPU LoRA cache tiering with max_cpu_loras > max_loras.",
+      "status": "proven"
+    },
+    {
+      "claim": "CUDA vLLM accepts max_cpu_loras > max_loras and serves multiple LoRA adapters.",
+      "evidence": [
+        "runs/cuda-vllm-models.json",
+        "runs/cuda-vllm-tldr-proof.json",
+        "runs/cuda-vllm-pts-proof.json"
+      ],
+      "next_action": "Run longer external CUDA/SGLang proof on controlled NVIDIA hardware.",
+      "remaining": "Bounded Kaggle T4 run; not a production capacity result.",
+      "status": "proven_bounded"
+    },
+    {
+      "claim": "High-quality domain adapters beat the base model on a sufficiently large benchmark.",
+      "evidence": [
+        "runs/cuda-vllm-base-vs-tldr.json",
+        "runs/vllm-metal-base-vs-lora.json"
+      ],
+      "next_action": "Find/train compatible domain adapters and run a >=30 item public benchmark comparison.",
+      "remaining": "Current public adapters prove serving mechanics; CUDA base-vs-TLDR tied on six items.",
+      "status": "external_required"
+    },
+    {
+      "claim": "Production-scale concurrency and capacity are characterized.",
+      "evidence": [
+        "runs/cuda-vllm-concurrency.json"
+      ],
+      "next_action": "Run >=1000 requests with saturation curves on controlled GPU hardware.",
+      "remaining": "Current concurrency runs are small hosted/local smoke tests.",
+      "status": "external_required"
+    },
+    {
+      "claim": "vLLM-Metal supports upstream-style CPU LoRA cache tiering.",
+      "evidence": [
+        "docs/THESIS_PROGRESS.md",
+        "runs/kaggle-vllm-startup-v0-xformers.log"
+      ],
+      "next_action": "Wait for upstream support, contribute implementation, or document a Metal-specific design alternative.",
+      "remaining": "vLLM-Metal raises NotImplementedError for max_cpu_loras > max_loras.",
+      "status": "blocked_upstream"
+    }
+  ],
+  "open_gap_count": 3,
+  "runs_path": "runs"
+}

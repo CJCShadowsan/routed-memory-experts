@@ -24,4 +24,5 @@ then
 else
   echo "Skipping live OpenAI-compatible proofs: http://127.0.0.1:8000/health is not reachable."
 fi
+rme summarize-proof-gaps --runs runs --output runs/proof-gap-ledger.json
 rme validate-artifacts --path runs

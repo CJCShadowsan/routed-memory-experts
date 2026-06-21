@@ -8,6 +8,10 @@ The project treats the thesis as falsifiable engineering work. Every supported c
 
 - `paper/routed-memory-experts.md` — arXiv-style preprint draft with claims, methods, results, and limitations.
 - `docs/COMPLETION_IMPLEMENTATION_PLAN.md` — detailed plan for completing all feasible local tasks.
+- `docs/FULL_PROOF_PHASED_PLAN.md` — remaining proof plan with local and external phases.
+- `docs/EXTERNAL_PROOF_RUNBOOK.md` — Kaggle/GPU/public-benchmark instructions for external gaps.
+- `docs/PUBLIC_BENCHMARK_CONTRACT.md` — requirements before claiming public benchmark performance.
+- `docs/ADAPTER_CANDIDATES.md` — adapter serving vs. quality-superiority status.
 - `docs/IMPLEMENTATION_PLAN.md` — original phased implementation plan.
 - `docs/THESIS_PROGRESS.md` — iteration-by-iteration evidence vs. thesis.
 - `src/routed_memory_experts/` — executable proof harness.
@@ -43,6 +47,7 @@ uv pip install -e '.[dev]'
 pytest -q
 rme prove --workload workloads/real_world_v1.jsonl --experts experts --output runs/proof.json
 rme prove --workload workloads/benchmark_expanded_v1.jsonl --experts experts --output runs/benchmark-proof.json
+rme summarize-proof-gaps --runs runs --output runs/proof-gap-ledger.json
 rme validate-artifacts --path runs
 ```
 

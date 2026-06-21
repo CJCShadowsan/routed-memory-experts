@@ -15,6 +15,7 @@ SCHEMAS: dict[str, set[str]] = {
     "openai-comparison": {"base_url", "base_model", "expert_model", "base_accuracy", "expert_accuracy", "records"},
     "concurrency": {"base_url", "model", "request_count", "concurrency", "success_count", "error_count", "records"},
     "models": {"object", "data"},
+    "proof-gap-ledger": {"artifact_family", "completion_score", "gap_count", "open_gap_count", "gaps"},
 }
 
 
@@ -34,6 +35,8 @@ def infer_family(path: Path, data: dict) -> str:
         return "concurrency"
     if "models" in name and "data" in data:
         return "models"
+    if data.get("artifact_family") == "proof-gap-ledger" or "proof-gap-ledger" in name:
+        return "proof-gap-ledger"
     if "runtime-readiness" in name:
         return "runtime-readiness"
     if "router-comparison" in name:

@@ -16,6 +16,7 @@ from .openai_backend import (
     run_openai_compatible_proof,
 )
 from .proof import run_proof, summary_to_dict
+from .proof_gap import summarize_proof_gaps
 from .runtime_readiness import check_runtime_readiness, runtime_readiness_to_dict
 
 
@@ -89,6 +90,10 @@ def main(argv: list[str] | None = None) -> int:
 
     runtime = sub.add_parser("check-runtimes", help="check local serving runtime readiness")
     runtime.add_argument("--output", default="runs/runtime-readiness.json")
+
+    gaps = sub.add_parser("summarize-proof-gaps", help="write a machine-readable ledger of proven and remaining thesis gaps")
+    gaps.add_argument("--runs", default="runs")
+    gaps.add_argument("--output", default="runs/proof-gap-ledger.json")
 
     args = parser.parse_args(argv)
 
@@ -191,6 +196,12 @@ def main(argv: list[str] | None = None) -> int:
             print("BLOCKED: production adapter runtime is not ready on this host")
             return 9
         print("PASS: production adapter runtime is ready")
+        return 0
+
+    if args.command == "summarize-proof-gaps":
+        data = summarize_proof_gaps(args.runs, args.output)
+        print(json.dumps(data, indent=2, sort_keys=True))
+        print("PASS: proof gap ledger written")
         return 0
 
     return 1
