@@ -27,6 +27,7 @@ BASE_URL = "http://127.0.0.1:8000"
 V1_URL = f"{BASE_URL}/v1"
 VENV_DIR = ROOT / ".kaggle-venv"
 IN_VENV_ENV = "RME_KAGGLE_PROOF_IN_VENV"
+PYTHON_ENV_VARS_TO_DROP = ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE")
 
 
 def venv_python() -> Path:
@@ -35,9 +36,30 @@ def venv_python() -> Path:
     return VENV_DIR / "bin" / "python"
 
 
+def sanitized_env() -> dict[str, str]:
+    """Return an environment that does not leak notebook Python hooks.
+
+    Kaggle/Colab can inject `sitecustomize` through PYTHONPATH/PYTHONHOME. In
+    an isolated venv that hook may import packages, such as wrapt, before the
+    venv has installed them. Dropping Python-specific environment variables
+    keeps the venv isolated while preserving CUDA/PATH/LD_LIBRARY_PATH.
+    """
+    env = os.environ.copy()
+    for key in PYTHON_ENV_VARS_TO_DROP:
+        env.pop(key, None)
+    env["PYTHONNOUSERSITE"] = "1"
+    return env
+
+
+def sanitize_current_process_env() -> None:
+    for key in PYTHON_ENV_VARS_TO_DROP:
+        os.environ.pop(key, None)
+    os.environ["PYTHONNOUSERSITE"] = "1"
+
+
 def run(cmd: list[str], check: bool = True, timeout: int | None = None) -> subprocess.CompletedProcess:
     print("+", " ".join(str(part) for part in cmd), flush=True)
-    return subprocess.run(cmd, cwd=ROOT, check=check, timeout=timeout)
+    return subprocess.run(cmd, cwd=ROOT, check=check, timeout=timeout, env=sanitized_env())
 
 
 def ensure_isolated_venv() -> None:
@@ -71,7 +93,7 @@ def ensure_isolated_venv() -> None:
     run([str(py), "-m", "pip", "install", "-q", "-e", ".[dev]"], timeout=600)
     run([str(py), "-m", "pip", "install", "-q", "vllm"], timeout=1200)
 
-    env = os.environ.copy()
+    env = sanitized_env()
     env[IN_VENV_ENV] = "1"
     print("Re-running proof inside isolated virtualenv")
     os.execve(str(py), [str(py), str(Path(__file__).resolve())], env)
@@ -127,6 +149,7 @@ def save_models() -> None:
 
 
 def main() -> int:
+    sanitize_current_process_env()
     ensure_isolated_venv()
     print("Python:", sys.version)
     print("Python executable:", sys.executable)
