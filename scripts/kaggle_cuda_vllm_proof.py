@@ -31,6 +31,7 @@ PYTHON_ENV_VARS_TO_DROP = ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE")
 CUDA_LINK_DIR = ROOT / ".cuda-link"
 VLLM_LOG = ROOT / "runs" / "kaggle-vllm-startup.log"
 VLLM_PACKAGE = "vllm==0.10.2"
+TRANSFORMERS_PACKAGE = "transformers>=4.55.0,<5"
 
 
 def venv_python() -> Path:
@@ -147,7 +148,10 @@ def ensure_isolated_venv() -> None:
     # route every backend attempt through vLLM V1 FlashInfer and crash on the
     # first LoRA prefill with `BatchPrefillWithPagedKVCache ... invalid
     # argument`. vLLM 0.10.2 still has the V0 fallback needed for this proof.
-    run([str(py), "-m", "pip", "install", "-q", VLLM_PACKAGE], timeout=1200)
+    # Keep Transformers below 5 as well: vLLM 0.10.2 expects tokenizer
+    # `all_special_tokens_extended`, which Qwen2Tokenizer lacks in newer
+    # Transformers releases.
+    run([str(py), "-m", "pip", "install", "-q", VLLM_PACKAGE, TRANSFORMERS_PACKAGE], timeout=1200)
 
     env = sanitized_env()
     env[IN_VENV_ENV] = "1"
@@ -271,6 +275,7 @@ def main() -> int:
     print("Python:", sys.version)
     print("Python executable:", sys.executable)
     run([sys.executable, "-m", "pip", "show", "vllm"], timeout=60)
+    run([sys.executable, "-m", "pip", "show", "transformers"], timeout=60)
     run([sys.executable, "-m", "pytest", "-q"])
     run(["nvidia-smi"], check=False, timeout=60)
     configure_cuda_linker_env()
