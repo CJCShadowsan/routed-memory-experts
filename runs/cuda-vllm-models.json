@@ -1,0 +1,80 @@
+{
+  "data": [
+    {
+      "created": 1782071823,
+      "id": "Qwen/Qwen3-0.6B",
+      "max_model_len": 768,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": null,
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1782071823,
+          "group": null,
+          "id": "modelperm-3b611f5a6b1e406986e02d3368bcf4b5",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "Qwen/Qwen3-0.6B"
+    },
+    {
+      "created": 1782071823,
+      "id": "tldr",
+      "max_model_len": null,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": "Qwen/Qwen3-0.6B",
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1782071823,
+          "group": null,
+          "id": "modelperm-8729590c8be94873a2cc2666d4584f42",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "phh/Qwen3-0.6B-TLDR-Lora"
+    },
+    {
+      "created": 1782071823,
+      "id": "pts",
+      "max_model_len": null,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": "Qwen/Qwen3-0.6B",
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1782071823,
+          "group": null,
+          "id": "modelperm-af5aa4acd8504721a2cff0f3fee10c39",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "codelion/Qwen3-0.6B-PTS-DPO-LoRA"
+    }
+  ],
+  "object": "list"
+}

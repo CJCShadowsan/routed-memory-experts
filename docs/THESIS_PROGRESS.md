@@ -261,5 +261,42 @@ Claims still not fully proven, and why they are not fully completable right now:
 - Large public benchmark validation: requires benchmark licensing/selection and substantially larger evaluation runs beyond the current local proof loop.
 - Production-scale concurrency: requires longer runs, larger traffic mixes, and likely stronger hardware/runtime tuning.
 - Upstream-style hot/warm/cold CPU LoRA cache tiering on Metal: blocked by vLLM-Metal `NotImplementedError` for `max_cpu_loras > max_loras`.
-- CUDA vLLM/SGLang adapter cache behavior: current host has no NVIDIA/CUDA GPU.
+- Production-scale CUDA vLLM/SGLang adapter cache behavior: current local host has no NVIDIA/CUDA GPU; the Kaggle proof below establishes bounded CUDA vLLM cache-tier behavior but not production-scale serving.
 - High-quality domain-specialized adapter superiority: current public adapters prove serving mechanics; proving domain superiority requires finding or training appropriate adapters and larger fair benchmarks.
+
+## Iteration 9 assessment
+
+Status: Completed hosted CUDA vLLM LoRA cache-tier proof on Kaggle T4.
+
+Closeness to ultimate goal: 90%.
+
+Evidence added:
+
+- Ran `scripts/kaggle_cuda_vllm_proof.py` in a Kaggle GPU notebook with 2x Tesla T4 visible through `nvidia-smi`.
+- Started CUDA vLLM with `Qwen/Qwen3-0.6B`, `--enable-lora`, `--max-loras 2`, `--max-cpu-loras 4`, and `--max-lora-rank 64`.
+- Used vLLM 0.10.2 with the V0/XFormers fallback after latest vLLM V1/FlashInfer crashed on T4 LoRA prefill; pinned Transformers below 5 to keep the tokenizer API compatible.
+- Loaded two LoRA adapters: `tldr=phh/Qwen3-0.6B-TLDR-Lora` and `pts=codelion/Qwen3-0.6B-PTS-DPO-LoRA`.
+- Copied CUDA proof artifacts into `runs/`: `cuda-vllm-models.json`, `cuda-vllm-tldr-proof.json`, `cuda-vllm-pts-proof.json`, `cuda-vllm-base-vs-tldr.json`, `cuda-vllm-concurrency.json`, and `kaggle-vllm-startup-v0-xformers.log`.
+
+Observed result:
+
+- `runs/cuda-vllm-models.json` lists the base model plus both LoRA adapter IDs, with `tldr` rooted at `phh/Qwen3-0.6B-TLDR-Lora` and `pts` rooted at `codelion/Qwen3-0.6B-PTS-DPO-LoRA`, both parented to `Qwen/Qwen3-0.6B`.
+- TLDR LoRA proof: 6 workload items, accuracy 1.0, p50 latency about 4317 ms, p95 latency about 4513 ms.
+- PTS LoRA proof: 6 workload items, accuracy 1.0, p50 latency about 4478 ms, p95 latency about 5598 ms.
+- Base-vs-TLDR comparison: base accuracy 1.0, expert accuracy 1.0, 6 ties, 0 expert wins, 0 expert losses.
+- CUDA concurrency benchmark: 24 requests at concurrency 4, 24 successes, 0 errors, accuracy 0.9167, throughput about 0.653 requests/s, p50 about 4974 ms, p95 about 9702 ms, p99 about 10512 ms.
+- `rme validate-artifacts --path runs` reported all proof artifacts valid in the Kaggle run.
+
+Claims additionally supported:
+
+- Upstream CUDA vLLM can accept and run the CPU LoRA cache-tier configuration that vLLM-Metal rejects: `max_cpu_loras > max_loras`.
+- The same OpenAI-compatible proof harness can exercise CUDA vLLM and Apple Silicon vLLM-Metal.
+- Multiple CUDA-served LoRA adapters can be named, listed, routed to, and benchmarked through the harness.
+- Small concurrent routed CUDA serving works without request errors in the bounded Kaggle run.
+
+Claims still not fully proven:
+
+- Adapter quality superiority is not proven: the CUDA base-vs-TLDR comparison tied on the six-item fixture.
+- Production-scale serving is not proven: Kaggle T4 is a hosted free notebook environment with small request counts and limited runtime control.
+- Broad public benchmark validation remains future work.
+- Metal CPU LoRA cache tiering remains unsupported by vLLM-Metal even though CUDA vLLM supports the analogous configuration.

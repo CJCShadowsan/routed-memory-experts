@@ -58,6 +58,8 @@ The key missing project proof is whether CUDA vLLM accepts:
 
 If the server starts and `/v1/models` lists base + adapters, the CUDA runtime supports the cache-tier configuration that vLLM-Metal currently rejects.
 
+The known-good Kaggle T4 path pins `vllm==0.10.2` and `transformers>=4.55.0,<5`, then starts vLLM with the V0/XFormers fallback. This avoids the latest vLLM V1/FlashInfer request-time crash on T4 LoRA prefill while keeping the tokenizer API expected by vLLM 0.10.2.
+
 Download these artifacts and commit them back to the repo if successful:
 
 - `runs/cuda-vllm-models.json`

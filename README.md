@@ -28,10 +28,11 @@ The repo now proves:
 - local neural routed context injection through Ollama;
 - Apple Silicon vLLM-Metal/MLX OpenAI-compatible serving;
 - real LoRA adapter loading under vLLM-Metal;
+- CUDA vLLM LoRA serving on Kaggle T4 with `max_cpu_loras > max_loras`;
 - artifact validation for proof JSONs;
 - optional live base-vs-LoRA and concurrency benchmarks when a vLLM-Metal server is running.
 
-It does **not** yet prove upstream-style vLLM-Metal CPU LoRA cache tiering with `max_cpu_loras > max_loras`; the current runtime explicitly rejects that mode.
+It does **not** yet prove upstream-style vLLM-Metal CPU LoRA cache tiering with `max_cpu_loras > max_loras`; the current Metal runtime explicitly rejects that mode. The analogous upstream CUDA vLLM configuration is proven in the bounded Kaggle artifacts under `runs/cuda-vllm-*.json`.
 
 ## Quick start
 
@@ -84,3 +85,16 @@ scripts/run-local-proofs.sh
 ```
 
 This runs deterministic proofs and skips live OpenAI-compatible proofs if no server is reachable at `http://127.0.0.1:8000/health`.
+
+## Hosted CUDA vLLM proof
+
+With a Kaggle GPU notebook and internet enabled:
+
+```bash
+%cd /kaggle/working
+!git clone https://github.com/CJCShadowsan/routed-memory-experts.git
+%cd routed-memory-experts
+!python scripts/kaggle_cuda_vllm_proof.py
+```
+
+The successful proof writes `runs/cuda-vllm-models.json`, `runs/cuda-vllm-tldr-proof.json`, `runs/cuda-vllm-pts-proof.json`, `runs/cuda-vllm-base-vs-tldr.json`, and `runs/cuda-vllm-concurrency.json`.

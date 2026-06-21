@@ -1,0 +1,71 @@
+{
+  "accuracy": 1.0,
+  "base_url": "http://127.0.0.1:8000/v1",
+  "correct_count": 6,
+  "model": "pts",
+  "p50_latency_ms": 4477.612876999956,
+  "p95_latency_ms": 5597.595972000818,
+  "records": [
+    {
+      "correct": true,
+      "expert_name": "kubernetes-expert",
+      "item_id": "k8s-helm-1",
+      "latency_ms": 8969.8012559993,
+      "model": "pts",
+      "oracle_domain": "kubernetes",
+      "response": "<think>\n\n</think>\n\nFor a Kubernetes Helm chart, you should use the `helm template` command to render the chart and the `helm unittest` command to verify the rendered manifests and chart assertions.",
+      "routed_domain": "kubernetes"
+    },
+    {
+      "correct": true,
+      "expert_name": "kubernetes-expert",
+      "item_id": "k8s-deploy-1",
+      "latency_ms": 4477.612876999956,
+      "model": "pts",
+      "oracle_domain": "kubernetes",
+      "response": "<think>\n\n</think>\n\nThe stronger readiness signal than object existence is `availableReplicas` and `observedGeneration`.",
+      "routed_domain": "kubernetes"
+    },
+    {
+      "correct": true,
+      "expert_name": "python-expert",
+      "item_id": "py-pytest-1",
+      "latency_ms": 5597.595972000818,
+      "model": "pts",
+      "oracle_domain": "python",
+      "response": "<think>\n\n</think>\n\nIn Python, use pytest with the `pytest -q` flag to run the suite, and assert the failure before implementing the fix.",
+      "routed_domain": "python"
+    },
+    {
+      "correct": true,
+      "expert_name": "python-expert",
+      "item_id": "py-decorator-1",
+      "latency_ms": 4360.937032999573,
+      "model": "pts",
+      "oracle_domain": "python",
+      "response": "<think>\n\n</think>\n\nA Python decorator should use `functools.wraps` to preserve wrapped function metadata.",
+      "routed_domain": "python"
+    },
+    {
+      "correct": true,
+      "expert_name": "finance-expert",
+      "item_id": "fin-npv-1",
+      "latency_ms": 4363.362045000031,
+      "model": "pts",
+      "oracle_domain": "finance",
+      "response": "<think>\n\n</think>\n\nNPV discounts each future cash flow by the required return and subtracts the initial investment.",
+      "routed_domain": "finance"
+    },
+    {
+      "correct": true,
+      "expert_name": "finance-expert",
+      "item_id": "fin-wacc-1",
+      "latency_ms": 4505.67220800076,
+      "model": "pts",
+      "oracle_domain": "finance",
+      "response": "<think>\n\n</think>\n\nWACC combines the cost of equity and after-tax cost of debt according to capital structure weights.",
+      "routed_domain": "finance"
+    }
+  ],
+  "workload_count": 6
+}

@@ -1,0 +1,71 @@
+{
+  "accuracy": 1.0,
+  "base_url": "http://127.0.0.1:8000/v1",
+  "correct_count": 6,
+  "model": "tldr",
+  "p50_latency_ms": 4316.680668999652,
+  "p95_latency_ms": 4513.409327999398,
+  "records": [
+    {
+      "correct": true,
+      "expert_name": "kubernetes-expert",
+      "item_id": "k8s-helm-1",
+      "latency_ms": 21828.0488420005,
+      "model": "tldr",
+      "oracle_domain": "kubernetes",
+      "response": "<think>\n\n</think>\n\nFor a Kubernetes Helm chart, you should use the helm template to render the charts and the helm unittest to verify the rendered manifests and chart assertions.",
+      "routed_domain": "kubernetes"
+    },
+    {
+      "correct": true,
+      "expert_name": "kubernetes-expert",
+      "item_id": "k8s-deploy-1",
+      "latency_ms": 4452.866709000773,
+      "model": "tldr",
+      "oracle_domain": "kubernetes",
+      "response": "<think>\n\n</think>\n\nA Kubernetes Deployment should be checked with availableReplicas and observedGeneration, not only object existence.",
+      "routed_domain": "kubernetes"
+    },
+    {
+      "correct": true,
+      "expert_name": "python-expert",
+      "item_id": "py-pytest-1",
+      "latency_ms": 2424.8394819996975,
+      "model": "tldr",
+      "oracle_domain": "python",
+      "response": "<think>\n\n</think>\n\npytest | failure.",
+      "routed_domain": "python"
+    },
+    {
+      "correct": true,
+      "expert_name": "python-expert",
+      "item_id": "py-decorator-1",
+      "latency_ms": 2675.2419790000204,
+      "model": "tldr",
+      "oracle_domain": "python",
+      "response": "<think>\n\n</think>\n\nfunctools.wraps.",
+      "routed_domain": "python"
+    },
+    {
+      "correct": true,
+      "expert_name": "finance-expert",
+      "item_id": "fin-npv-1",
+      "latency_ms": 4316.680668999652,
+      "model": "tldr",
+      "oracle_domain": "finance",
+      "response": "<think>\n\n</think>\n\nNPV discounts each future cash flow by the required return and subtracts the initial investment.",
+      "routed_domain": "finance"
+    },
+    {
+      "correct": true,
+      "expert_name": "finance-expert",
+      "item_id": "fin-wacc-1",
+      "latency_ms": 4513.409327999398,
+      "model": "tldr",
+      "oracle_domain": "finance",
+      "response": "<think>\n\n</think>\n\nWACC combines the cost of equity and after-tax cost of debt according to capital structure weights.",
+      "routed_domain": "finance"
+    }
+  ],
+  "workload_count": 6
+}
