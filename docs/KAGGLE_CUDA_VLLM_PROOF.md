@@ -18,6 +18,21 @@ Use this in a Kaggle Notebook with:
 !python scripts/kaggle_cuda_vllm_proof.py
 ```
 
+The runner creates `.kaggle-venv/` and installs vLLM there before re-running
+itself. This avoids modifying Kaggle/Colab's preloaded global Python image,
+which can otherwise emit many unrelated dependency-conflict warnings for
+packages such as TensorFlow, cuDF, BigFrames, Gradio, and Google ADK.
+
+If you already ran an older version of this script and saw resolver warnings,
+restart the Kaggle session, pull the latest repo, and rerun:
+
+```bash
+%cd /kaggle/working/routed-memory-experts
+!git pull
+!rm -rf .kaggle-venv
+!python scripts/kaggle_cuda_vllm_proof.py
+```
+
 ## Cell 3: Inspect artifacts
 
 ```bash

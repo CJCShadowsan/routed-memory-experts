@@ -5,9 +5,9 @@ Run this inside a Kaggle Notebook with GPU enabled and internet enabled:
 
     !python scripts/kaggle_cuda_vllm_proof.py
 
-It installs vLLM if needed, starts a local CUDA vLLM OpenAI-compatible server,
-loads two Qwen3-0.6B LoRA adapters, runs the repository proof commands, and
-writes CUDA-specific artifacts under runs/.
+The script creates an isolated virtualenv under .kaggle-venv before installing
+vLLM. This avoids mutating Kaggle/Colab's large preloaded global environment,
+which otherwise produces many unrelated dependency-conflict warnings.
 """
 from __future__ import annotations
 
@@ -18,16 +18,52 @@ import subprocess
 import sys
 import time
 import urllib.request
+import venv
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "http://127.0.0.1:8000"
 V1_URL = f"{BASE_URL}/v1"
+VENV_DIR = ROOT / ".kaggle-venv"
+IN_VENV_ENV = "RME_KAGGLE_PROOF_IN_VENV"
+
+
+def venv_python() -> Path:
+    if os.name == "nt":
+        return VENV_DIR / "Scripts" / "python.exe"
+    return VENV_DIR / "bin" / "python"
 
 
 def run(cmd: list[str], check: bool = True, timeout: int | None = None) -> subprocess.CompletedProcess:
-    print("+", " ".join(cmd), flush=True)
+    print("+", " ".join(str(part) for part in cmd), flush=True)
     return subprocess.run(cmd, cwd=ROOT, check=check, timeout=timeout)
+
+
+def ensure_isolated_venv() -> None:
+    """Create a clean venv and re-exec inside it.
+
+    Kaggle/Colab images preinstall many packages with tight pins. Installing
+    vLLM into that global Python can upgrade numpy/protobuf/cuda libraries and
+    trigger scary but unrelated resolver warnings. A venv keeps this proof's
+    dependencies separate from the notebook image.
+    """
+    if os.environ.get(IN_VENV_ENV) == "1":
+        return
+
+    py = venv_python()
+    if not py.exists():
+        print(f"Creating isolated virtualenv at {VENV_DIR}")
+        venv.EnvBuilder(with_pip=True, clear=False, symlinks=True).create(VENV_DIR)
+
+    print("Installing proof dependencies into isolated virtualenv")
+    run([str(py), "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"], timeout=300)
+    run([str(py), "-m", "pip", "install", "-q", "-e", ".[dev]"], timeout=600)
+    run([str(py), "-m", "pip", "install", "-q", "vllm"], timeout=1200)
+
+    env = os.environ.copy()
+    env[IN_VENV_ENV] = "1"
+    print("Re-running proof inside isolated virtualenv")
+    os.execve(str(py), [str(py), str(Path(__file__).resolve())], env)
 
 
 def wait_for_health(timeout_s: int = 300) -> None:
@@ -55,10 +91,11 @@ def save_models() -> None:
 
 
 def main() -> int:
+    ensure_isolated_venv()
     print("Python:", sys.version)
-    run([sys.executable, "-m", "pip", "install", "-q", "-e", ".[dev]"])
-    run([sys.executable, "-m", "pip", "install", "-q", "vllm"])
+    print("Python executable:", sys.executable)
     run([sys.executable, "-m", "pytest", "-q"])
+    run(["nvidia-smi"], check=False, timeout=60)
 
     server_cmd = [
         sys.executable,
