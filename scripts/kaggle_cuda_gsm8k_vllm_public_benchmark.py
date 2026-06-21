@@ -53,6 +53,33 @@ def run(cmd: list[str], check: bool = True, timeout: int | None = None) -> subpr
     return subprocess.run(cmd, cwd=ROOT, check=check, timeout=timeout, env=sanitized_env())
 
 
+def patch_prometheus_fastapi_route_compat() -> None:
+    """Patch vLLM's bundled FastAPI instrumentation for new Starlette routers.
+
+    Kaggle's Python 3.12 environment currently resolves a FastAPI/Starlette stack
+    where `prometheus_fastapi_instrumentator.routing._get_route_name` may see a
+    Starlette `_IncludedRouter`. Older instrumentator releases assume every route
+    object has `.path`, causing every vLLM OpenAI endpoint, including `/health`,
+    to return HTTP 500 even after the engine starts successfully.
+    """
+    candidates = sorted(VENV_DIR.glob("lib/python*/site-packages/prometheus_fastapi_instrumentator/routing.py"))
+    if not candidates:
+        print("prometheus_fastapi_instrumentator routing.py not found; skipping compatibility patch")
+        return
+    routing_py = candidates[0]
+    text = routing_py.read_text(encoding="utf-8")
+    old = "route_name = route.path"
+    new = "route_name = getattr(route, \"path\", getattr(route, \"prefix\", \"\"))"
+    if new in text:
+        print(f"prometheus route compatibility patch already present in {routing_py}")
+        return
+    if old not in text:
+        print(f"Expected route.path assignment not found in {routing_py}; skipping compatibility patch")
+        return
+    routing_py.write_text(text.replace(old, new), encoding="utf-8")
+    print(f"patched prometheus route compatibility in {routing_py}")
+
+
 def create_venv(force: bool = False) -> None:
     if force and VENV_DIR.exists():
         shutil.rmtree(VENV_DIR)
@@ -87,6 +114,7 @@ def ensure_venv() -> None:
     run([str(py), "-m", "pip", "install", "-q", "wrapt"], timeout=300)
     run([str(py), "-m", "pip", "install", "-q", "-e", ".[dev]"], timeout=600)
     run([str(py), "-m", "pip", "install", "-q", VLLM_PACKAGE, TRANSFORMERS_PACKAGE], timeout=1200)
+    patch_prometheus_fastapi_route_compat()
     env = sanitized_env()
     env[IN_VENV_ENV] = "1"
     os.execve(str(py), [str(py), str(Path(__file__).resolve())], env)
