@@ -1,0 +1,173 @@
+{
+  "artifact_family": "public-openai-benchmark",
+  "base_accuracy": 0.25,
+  "base_correct_count": 2,
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "base_p50_latency_ms": 6067.316828000912,
+  "base_p95_latency_ms": 6453.306122000868,
+  "base_url": "http://127.0.0.1:8000/v1",
+  "benchmark": "workloads/gsm8k_public_sample.jsonl",
+  "expert_accuracy": 0.375,
+  "expert_correct_count": 3,
+  "expert_losses": 0,
+  "expert_model": "math",
+  "expert_p50_latency_ms": 26413.096939999377,
+  "expert_p95_latency_ms": 26759.202296001604,
+  "expert_wins": 1,
+  "records": [
+    {
+      "base_correct": false,
+      "base_latency_ms": 7362.21412300074,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine how much Janet makes every day at the farmers' market, we need to follow these steps:\n\n1. Calculate the total number of eggs laid by the ducks each day.\n2. Subtract the number of eggs eaten during the day from the total number of eggs to find out how many eggs are left for sale.\n3. Determine the price per egg sold at the farmers' market.\n4. Multiply the remaining number of eggs by the price per egg to find the total earnings.\n\nLet's start with the first step:\n\n1. The ducks lay 16 eggs per day.\n2. Janet eats 3 eggs for breakfast every morning, so she eats \\(3 \\times 7 = 21\\) eggs in a day (since there are 7 days in a week).\n3. Therefore, the number of eggs left for sale is \\(16 - 21 = -5\\). Since this result is negative, it means that Janet has already eaten more than enough eggs to sell them all. This indicates that Janet did not have enough eggs to sell any on a single day",
+      "expected_contains": [
+        "18"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 29489.896535000298,
+      "expert_model": "math",
+      "expert_response": "To determine how much money Janet makes every day from selling the eggs, we need to follow these steps:\n\n1. Calculate the total number of eggs laid by the ducks in one day.\n2. Determine how many eggs Janet eats in one day.\n3. Subtract the number of eggs eaten from the total number of eggs laid to find out how many eggs are sold.\n4. Calculate the revenue from selling the eggs.\n\nFirst, let's calculate the total number of eggs laid by the ducks in one day:\n\\[\n16 \\text{ (eggs/day)} + 3 \\text{ (breakfast) + 4 (friends') = 23 \\text{ (total eggs/day)}\n\\]\n\nNext, we know that Janet eats 3 eggs each day:\n\\[\n23 - 3 = 20 \\text{ (eggs eaten/day)}\n\\]\n\nSince she sells the remaining eggs at the farmers' market, the number of eggs sold is:\n\\[\n20 \\text{ (eggs eaten/day)} \\times 2 \\text{ (price per",
+      "item_id": "gsm8k-test-0",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": true,
+      "base_latency_ms": 6453.306122000868,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine the total number of bolts required for the robe, we need to calculate the amount of each type of fiber needed and then sum them up.\n\n1. **Blue Fiber**: The robe requires 2 bolts of blue fiber.\n   \\[\n   \\text{Blue Fiber} = 2 \\text{ bolts}\n   \\]\n\n2. **White Fiber**: The robe requires half as much white fiber as blue fiber.\n   \\[\n   \\text{White Fiber} = \\frac{1}{2} \\times 2 \\text{ bolts} = 1 \\text{ bolt}\n   \\]\n\n3. **Total Bolts**: To find the total number of bolts needed, we add the blue and white fibers together.\n   \\[\n   \\text{Total Bolts} = \\text{Blue Fiber} + \\text{White Fiber} = 2 + 1 = 3 \\text{ bolts}\n   \\]\n\nThus, the total number of bolts required is:\n\\[\n\\boxed{3}\n\\]",
+      "expected_contains": [
+        "3"
+      ],
+      "expert_correct": true,
+      "expert_latency_ms": 26759.202296001604,
+      "expert_model": "math",
+      "expert_response": "To determine how many bolts of blue and white fiber are required to make one robe, we start by defining the variables:\n- Let \\( B \\) represent the number of bolts of blue fiber.\n- Let \\( W \\) represent the number of bolts of white fiber.\n\nAccording to the problem, the robe requires 2 bolts of blue fiber and half as much white fiber. Therefore, the number of bolts of white fiber is given by:\n\\[ W = \\frac{1}{2}B \\]\n\nThe total number of bolts needed for one robe is the sum of the blue and white fibers:\n\\[ T = B + W \\]\nSubstituting the expression for \\( W \\):\n\\[ T = B + \\frac{1}{2}B \\]\nCombining like terms:\n\\[ T = \\frac{3}{2}B \\]\n\nThis means that for every two bolts of blue fiber, one bolt of white fiber is also needed. To find out how many bolts are required for one robe, we need to express \\( T \\) in terms of \\( B \\):\n\\[ T",
+      "item_id": "gsm8k-test-1",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 6027.680618000886,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine Josh's profit from flipping his house, we need to follow these steps:\n\n1. **Calculate the total cost of the house including repairs:**\n   - Cost of the house: $80,000\n   - Cost of repairs: $50,000\n   - Total cost = $80,000 + $50,000 = $130,000\n\n2. **Determine the increase in value due to repairs:**\n   - Increase in value = 150% of the original cost\n   - Original cost = $80,000\n   - Increase in value = 150% of $80,000 = 1.5 * $80,000 = $120,000\n\n3. **Calculate the net gain or loss from the repairs:**\n   - Net gain = Increase in value - Total cost\n   - Net gain = $120,000 - $130,",
+      "expected_contains": [
+        "70000"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 26413.096939999377,
+      "expert_model": "math",
+      "expert_response": "To determine Josh's profit from flipping his house, we need to follow these steps:\n\n1. **Calculate the total cost of the house**: Josh bought the house for $80,000 and put in $50,000 in repairs. Therefore, the total cost is:\n   \\[\n   80,000 + 50,000 = 130,000\n   \\]\n\n2. **Determine the increase in value due to repairs**: The value of the house increased by 150% after the repairs. To find out how much the value increased, we calculate 150% of the original price:\n   \\[\n   150\\% \\times 80,000 = 1.5 \\times 80,000 = 120,000\n   \\]\n   So, the value of the house increased by $120,000.\n\n3. **Calculate the net gain or loss**: Since the value",
+      "item_id": "gsm8k-test-2",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 6088.438418999431,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine how many total meters James runs in a week, we need to follow these steps:\n\n1. Calculate the distance James runs in one sprint.\n2. Multiply that distance by the number of sprints he runs per day.\n3. Multiply that result by the number of days he runs per week.\n\nFirst, let's calculate the distance James runs in one sprint:\n\\[ \\text{Distance per sprint} = 60 \\text{ meters} \\]\n\nNext, we'll find out how much distance he runs in one week:\n\\[ \\text{Distance per week} = \\text{Distance per sprint} \\times \\text{Number of sprints per week} \\]\n\\[ \\text{Distance per week} = 60 \\text{ meters/sprint} \\times 3 \\text{ sprints/day} \\times 7 \\text{ days/week} \\]\n\\[ \\text{Distance per week} = 60 \\times 3 \\times 7 \\]\n\\[ \\text{Distance per week} = 180 \\times 7",
+      "expected_contains": [
+        "540"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 21763.0549229998,
+      "expert_model": "math",
+      "expert_response": "To determine how many total meters James runs in a week, we need to follow these steps:\n\n1. Calculate the distance James runs in one sprint.\n2. Multiply that distance by the number of times he runs per week.\n\nFirst, let's find out how far James runs in one sprint:\n\\[ \\text{Distance per sprint} = 60 \\text{ meters} \\]\n\nNext, since James runs 3 sprints per week, we multiply the distance per sprint by the number of sprints per week:\n\\[ \\text{Total distance per week} = 60 \\text{ meters/sprint} \\times 3 \\text{ sprints/week} \\]\n\\[ \\text{Total distance per week} = 180 \\text{ meters/week} \\]\n\nTherefore, the total distance James runs in a week is **180 meters**.",
+      "item_id": "gsm8k-test-3",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": true,
+      "base_latency_ms": 4736.878340001567,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine how many cups of feed Wendi needs for the final meal of the day, we can follow these steps:\n\n1. Calculate the total amount of feed given to all the chickens in one day:\n   - In the morning, she gives 15 cups.\n   - In the afternoon, she gives another 25 cups.\n   - Therefore, the total amount of feed given in one day is \\(15 + 25 = 40\\) cups.\n\n2. Since there are 20 chickens in the flock, and each chicken gets 3 cups of feed per day, the total number of cups of feed needed for all the chickens in one day is \\(20 \\times 3 = 60\\) cups.\n\nSo, Wendi needs 60 cups of feed for the final meal of the day.",
+      "expected_contains": [
+        "20"
+      ],
+      "expert_correct": true,
+      "expert_latency_ms": 26531.72093500143,
+      "expert_model": "math",
+      "expert_response": "To determine how many cups of mixed chicken feed Wendi needs for her flock of chickens, we can follow these steps:\n\n1. Calculate the total amount of feed given in the morning:\n   - Each chicken gets 3 cups in the morning.\n   - There are 20 chickens.\n   - Total feed in the morning = \\(20 \\text{ chickens} \\times 3 \\text{ cups/chicken} = 60 \\text{ cups}\\).\n\n2. Calculate the total amount of feed given in the afternoon:\n   - Each chicken gets 3 cups in the afternoon.\n   - There are 20 chickens.\n   - Total feed in the afternoon = \\(20 \\text{ chickens} \\times 3 \\text{ cups/chicken} = 60 \\text{ cups}\\).\n\n3. Add the amounts from both days to find the total amount of feed needed:\n   - Morning + Afternoon = \\(60 \\text{ cups} + 60 \\text{ cups} = 120 \\text{ cups}\\).\n\nTherefore,",
+      "item_id": "gsm8k-test-4",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 6074.756623998837,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine how much Kylar needs to pay for 16 glasses, we first need to calculate the cost of one specific glass. According to the problem, each second glass costs 60% of the price of a regular glass.\n\nLet's denote:\n- The price of a regular glass as \\( P \\).\n- The price of a second glass as \\( P_2 = 0.6P \\).\n\nGiven that one glass costs $5, we can find the price of a second glass using the relationship between the prices of regular and second glasses:\n\n\\[ P + P_2 = 5 \\]\n\\[ P + 0.6P = 5 \\]\n\\[ 1.6P = 5 \\]\n\nSolving for \\( P \\):\n\n\\[ P = \\frac{5}{1.6} \\]\n\\[ P = 3.125 \\]\n\nNow that we know the price of a regular glass is $3.125, we can calculate the total cost for 16 glasses:\n\n\\[ \\text{Total Cost} = ",
+      "expected_contains": [
+        "64"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 21721.54436999881,
+      "expert_model": "math",
+      "expert_response": "To determine how much Kylar needs to pay for the glasses, we can follow these steps:\n\n1. **Calculate the cost of one glass**:\n   - The first glass costs $5.\n   - Every second glass costs 60% of that price.\n     \\[\n     \\text{Cost of one second glass} = 5 \\times 0.60 = 3 \\text{ dollars}\n     \\]\n\n2. **Determine the total cost for 16 glasses**:\n   - Since each second glass costs $3, the cost for 16 glasses is:\n     \\[\n     \\text{Total cost for 16 glasses} = 16 \\times 3 = 48 \\text{ dollars}\n     \\]\n\nTherefore, Kylar needs to pay $\\boxed{48}$ dollars for the 16 glasses.",
+      "item_id": "gsm8k-test-5",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 6067.316828000912,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine the total number of sheep on Toulouse, Charleston, and Seattle, we need to follow these steps:\n\n1. **Determine the number of sheep in Seattle:**\n   - We know that Seattle has 20 sheep.\n\n2. **Calculate the number of sheep in Charleston:**\n   - Charleston has 4 times as many sheep as Seattle.\n   \\[\n   \\text{Number of sheep in Charleston} = 4 \\times 20 = 80\n   \\]\n\n3. **Calculate the number of sheep in Toulouse:**\n   - Toulouse has twice as many sheep as Charleston.\n   \\[\n   \\text{Number of sheep in Toulouse} = 2 \\times 80 = 160\n   \\]\n\n4. **Sum the number of sheep from all three locations:**\n   \\[\n   \\text{Total number of sheep} = \\text{Sheep in Seattle} + \\text{Sheep in Charleston} + \\text{Sheep in Toulouse}\n   \\]\n   \\[\n   \\",
+      "expected_contains": [
+        "260"
+      ],
+      "expert_correct": true,
+      "expert_latency_ms": 20770.816647000174,
+      "expert_model": "math",
+      "expert_response": "Let's break down the information given:\n\n1. Seattle has 20 sheep.\n2. Charleston has 4 times as many sheep as Seattle, so Charleston has \\(4 \\times 20 = 80\\) sheep.\n3. Toulouse has twice as many sheep as Charleston, so Toulouse has \\(2 \\times 80 = 160\\) sheep.\n\nNow we can add up the number of sheep from all three cities to find the total:\n\nSeattle: 20 sheep\nCharleston: 80 sheep\nToulouse: 160 sheep\n\nTotal sheep = Seattle + Charleston + Toulouse\nTotal sheep = 20 + 80 + 160\nTotal sheep = 260\n\nSo, Toulouse, Charleston, and Seattle together have 260 sheep.",
+      "item_id": "gsm8k-test-6",
+      "oracle_domain": "math",
+      "outcome": "expert_win",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    },
+    {
+      "base_correct": false,
+      "base_latency_ms": 6032.233323998298,
+      "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "base_response": "To determine how long it takes for Carla to complete the download, we need to break down the process into manageable parts:\n\n1. **Normal Download Time**: \n   - The normal speed at which Carla downloads is 2 GB per minute.\n\n2. **Windows Restart Time**:\n   - During the first 60% of the download (since 40% is already completed), the download speed drops to 2 GB per minute.\n   - Therefore, in the first 60% of the download time, Carla will still be able to download \\(60\\% \\times 2\\) GB = \\(1.2\\) GB per minute.\n   - The remaining 40% of the download time will be spent downloading the last 40% of the file.\n\n3. **Last 40% Download Time**:\n   - After the initial 60% download, Carla needs to restart the download from the beginning.\n   - This means she will have to wait an additional 40% of the total download time to start the second part of the download",
+      "expected_contains": [
+        "160"
+      ],
+      "expert_correct": false,
+      "expert_latency_ms": 26583.341191999352,
+      "expert_model": "math",
+      "expert_response": "To determine how long it takes for Carla to complete the download, we need to account for the time spent restarting due to the update.\n\n1. First, calculate the total amount of data that needs to be downloaded:\n   - The total size of the file is 200 GB.\n   - Since 1 GB = 1024 MB, the file size in MB is \\(200 \\times 1024 = 204800\\) MB.\n   \n2. Next, calculate the time taken to download the initial part of the file without any interruptions:\n   - Carla normally downloads at a rate of 2 GB per minute.\n   - Therefore, the time required to download the first 51200 MB (since 204800 / 2 = 102400) is \\(51200 \\div 2 = 25600\\) minutes.\n   \n3. Now, add the time taken for the restarts:\n   - After the restarts, Carla has to",
+      "item_id": "gsm8k-test-7",
+      "oracle_domain": "math",
+      "outcome": "tie",
+      "routed_domain": "math",
+      "source": "GSM8K (Grade School Math 8K)",
+      "split": "test"
+    }
+  ],
+  "ties": 7,
+  "workload_count": 8
+}

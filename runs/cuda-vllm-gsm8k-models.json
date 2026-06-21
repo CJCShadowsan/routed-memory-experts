@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "created": 1782079795,
+      "id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "max_model_len": 768,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": null,
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1782079795,
+          "group": null,
+          "id": "modelperm-45692b550a65429393e2b80b1b1bec95",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "Qwen/Qwen2.5-0.5B-Instruct"
+    },
+    {
+      "created": 1782079795,
+      "id": "math",
+      "max_model_len": null,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": "Qwen/Qwen2.5-0.5B-Instruct",
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1782079795,
+          "group": null,
+          "id": "modelperm-fa6f26d05c1f467e9a8c4511d0ac1b02",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "tayyib-sayyid/qwen2.5-0.5b-gsm8k-lora"
+    }
+  ],
+  "object": "list"
+}

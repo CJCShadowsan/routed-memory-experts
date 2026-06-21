@@ -1,0 +1,91 @@
+{
+  "accuracy": 0.25,
+  "base_url": "http://127.0.0.1:8000/v1",
+  "correct_count": 2,
+  "model": "math",
+  "p50_latency_ms": 9375.305715999275,
+  "p95_latency_ms": 19871.167626999522,
+  "records": [
+    {
+      "correct": false,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-0",
+      "latency_ms": 9375.305715999275,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "Janet's total earnings from selling the eggs is 16 * 2 = $32. The total number of eggs laid per day is 16 * 7 = 112. Therefore, Janet makes 112 - 3 - 4 = $95 at the farmers' market every day. Thus, the answer is 95.",
+      "routed_domain": "math"
+    },
+    {
+      "correct": false,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-1",
+      "latency_ms": 2730.056305999824,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "A robe requires 2 bolts of blue fiber and half that amount for white fiber, totaling 4 bolts.",
+      "routed_domain": "math"
+    },
+    {
+      "correct": false,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-2",
+      "latency_ms": 19871.167626999522,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "Josh bought the house for $80,000 and put in repairs for $50,000, so the total cost was $80,000 + $50,000 = $130,000. The house's value increased by 150%, which means it became 250% of its original value. To find the new value, we calculate 250% of $80,000, which is (250/100) * $80,000 = $200,000. Therefore, Josh made a profit of $200,000 - $130,000 = $70,000.",
+      "routed_domain": "math"
+    },
+    {
+      "correct": true,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-3",
+      "latency_ms": 5264.653701000498,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "James runs 3 * 3 = 9 sprints per week. So he runs 9 * 60 = 540 meters per week. Therefore, the answer is 540.",
+      "routed_domain": "math"
+    },
+    {
+      "correct": true,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-4",
+      "latency_ms": 11787.36040199874,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "Wendi needs 3*20=60 cups of feed for the chickens in the morning. She also needs 3*20=60 cups of feed for the chickens in the afternoon. Therefore, she needs 60+60=120 cups of feed for the flocks in total. Since there are 20 chickens, she will need 120/20=6 cups of feed for the final meal of the day.",
+      "routed_domain": "math"
+    },
+    {
+      "correct": false,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-5",
+      "latency_ms": 11896.82638299928,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "Kylar needs to calculate the cost of 16 glasses. Since one glass costs $5, 16 glasses will cost 16 * $5 = $80. However, every second glass costs only 60% of the original price, which is 5 * 0.6 = $3. Therefore, Kylar needs to pay 16 * $3 = $48 for 16 glasses. The answer is $48.",
+      "routed_domain": "math"
+    },
+    {
+      "correct": false,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-6",
+      "latency_ms": 6103.293248001137,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "Toulouse has 2 * 20 = 40 sheep. Charleston has 4 * 20 = 80 sheep. Together they have 40 + 80 + 20 = 140 sheep.",
+      "routed_domain": "math"
+    },
+    {
+      "correct": false,
+      "expert_name": "math-expert",
+      "item_id": "gsm8k-test-7",
+      "latency_ms": 26502.538108999943,
+      "model": "math",
+      "oracle_domain": "math",
+      "response": "To calculate the total time Carla spends downloading the file, we need to consider both the normal speed and the restarts.\n\nFirst, let's determine how long it takes for Carla to complete the remaining part of the download after the restart:\n- The initial download is 200 GB (or 200 * 10^7 bytes).\n- Normal speed: 2 GB/minute = 2 * 10^3 bytes/minute.\n- Total time for the first 80% of the download: 200 * 10^7 / (2 * 10^3) minutes = 100 * 10^4 seconds = 1000000 seconds.\n- Restart time: 20 minutes.\n- Combined time for the first 80% of the download: 1000000 + 20 = 1000020 seconds.\n\nNow, let's add the restart time to find the total time spent on the entire download:\n- Total time for",
+      "routed_domain": "math"
+    }
+  ],
+  "workload_count": 8
+}

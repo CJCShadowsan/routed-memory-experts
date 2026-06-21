@@ -67,11 +67,12 @@
       "claim": "High-quality domain adapters beat the base model on a sufficiently large benchmark.",
       "evidence": [
         "runs/cuda-vllm-base-vs-tldr.json",
-        "runs/vllm-metal-base-vs-lora.json",
-        "runs/local-vllm-gsm8k-public-openai-benchmark.json"
+        "runs/cuda-vllm-gsm8k-public-openai-benchmark.json",
+        "runs/local-vllm-gsm8k-public-openai-benchmark.json",
+        "runs/vllm-metal-base-vs-lora.json"
       ],
-      "next_action": "Run scripts/kaggle_cuda_gsm8k_vllm_public_benchmark.py on CUDA and, if the adapter still underperforms, train/select a stronger math adapter before claiming quality superiority.",
-      "remaining": "Current public adapters prove serving mechanics; CUDA base-vs-TLDR tied on six items; local GSM8K Qwen2.5 math LoRA run did not beat base.",
+      "next_action": "Run a larger CUDA GSM8K/public benchmark (>=30 items, preferably full split or repeated seeds) and keep or train/select a stronger math adapter before publication-grade quality claims.",
+      "remaining": "A bounded CUDA GSM8K run shows expert > base, but the sample is below the >=30-item threshold for a quality-superiority claim.",
       "status": "external_required"
     },
     {
