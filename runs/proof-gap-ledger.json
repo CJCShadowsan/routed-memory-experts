@@ -1,8 +1,8 @@
 {
   "artifact_family": "proof-gap-ledger",
   "blocked_upstream_count": 1,
-  "completion_score": 0.6389,
-  "external_required_count": 2,
+  "completion_score": 0.75,
+  "external_required_count": 1,
   "gap_count": 9,
   "gaps": [
     {
@@ -71,14 +71,14 @@
         "runs/local-vllm-gsm8k-public-openai-benchmark.json",
         "runs/vllm-metal-base-vs-lora.json"
       ],
-      "next_action": "Run a larger CUDA GSM8K/public benchmark (>=30 items, preferably full split or repeated seeds) and keep or train/select a stronger math adapter before publication-grade quality claims.",
-      "remaining": "A bounded CUDA GSM8K run shows expert > base, but the sample is below the >=30-item threshold for a quality-superiority claim.",
-      "status": "external_required"
+      "next_action": "Keep as a regression and expand to a full public benchmark.",
+      "remaining": "None; threshold met.",
+      "status": "proven"
     },
     {
       "claim": "Production-scale concurrency and capacity are characterized.",
       "evidence": [
-        "runs/cuda-vllm-concurrency.json"
+        "runs/cuda-vllm-gsm8k-concurrency.json"
       ],
       "next_action": "Run >=1000 requests with saturation curves on controlled GPU hardware.",
       "remaining": "Current concurrency runs are small hosted/local smoke tests.",
@@ -95,6 +95,6 @@
       "status": "blocked_upstream"
     }
   ],
-  "open_gap_count": 3,
+  "open_gap_count": 2,
   "runs_path": "runs"
 }

@@ -1,19 +1,19 @@
 {
-  "accuracy": 0.3125,
+  "accuracy": 0.40625,
   "base_url": "http://127.0.0.1:8000/v1",
   "concurrency": 4,
-  "correct_count": 5,
+  "correct_count": 13,
   "error_count": 0,
   "model": "math",
-  "p50_latency_ms": 12076.523485000507,
-  "p95_latency_ms": 26660.745245000726,
-  "p99_latency_ms": 26660.745245000726,
+  "p50_latency_ms": 11407.266674999846,
+  "p95_latency_ms": 27216.05301999989,
+  "p99_latency_ms": 27291.28175799997,
   "records": [
     {
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-1",
-      "latency_ms": 2858.5452440001973,
+      "latency_ms": 2861.2184370012983,
       "model": "math",
       "success": true
     },
@@ -21,7 +21,7 @@
       "correct": true,
       "error": null,
       "item_id": "gsm8k-test-3",
-      "latency_ms": 5468.819147001341,
+      "latency_ms": 5476.918458,
       "model": "math",
       "success": true
     },
@@ -29,7 +29,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-0",
-      "latency_ms": 9659.459547001461,
+      "latency_ms": 9668.974125999739,
       "model": "math",
       "success": true
     },
@@ -37,7 +37,7 @@
       "correct": true,
       "error": null,
       "item_id": "gsm8k-test-4",
-      "latency_ms": 12076.523485000507,
+      "latency_ms": 12087.134386998514,
       "model": "math",
       "success": true
     },
@@ -45,7 +45,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-6",
-      "latency_ms": 6319.2666260001715,
+      "latency_ms": 6323.340280001503,
       "model": "math",
       "success": true
     },
@@ -53,7 +53,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-5",
-      "latency_ms": 12273.935580999023,
+      "latency_ms": 12281.892196000626,
       "model": "math",
       "success": true
     },
@@ -61,7 +61,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-2",
-      "latency_ms": 20481.96234900024,
+      "latency_ms": 20498.578856999302,
       "model": "math",
       "success": true
     },
@@ -69,7 +69,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-10",
-      "latency_ms": 9144.836043000396,
+      "latency_ms": 9157.67169100036,
       "model": "math",
       "success": true
     },
@@ -77,7 +77,7 @@
       "correct": true,
       "error": null,
       "item_id": "gsm8k-test-9",
-      "latency_ms": 12921.592775001045,
+      "latency_ms": 12936.521616999016,
       "model": "math",
       "success": true
     },
@@ -85,7 +85,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-8",
-      "latency_ms": 16209.810864000247,
+      "latency_ms": 16231.334743999469,
       "model": "math",
       "success": true
     },
@@ -93,7 +93,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-13",
-      "latency_ms": 2129.09216999833,
+      "latency_ms": 2131.7515109985834,
       "model": "math",
       "success": true
     },
@@ -101,7 +101,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-12",
-      "latency_ms": 9663.183995000509,
+      "latency_ms": 9664.126724001108,
       "model": "math",
       "success": true
     },
@@ -109,7 +109,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-7",
-      "latency_ms": 27286.897912999848,
+      "latency_ms": 27300.599621999936,
       "model": "math",
       "success": true
     },
@@ -117,7 +117,7 @@
       "correct": false,
       "error": null,
       "item_id": "gsm8k-test-11",
-      "latency_ms": 14408.912694001629,
+      "latency_ms": 14478.879670001334,
       "model": "math",
       "success": true
     },
@@ -125,7 +125,39 @@
       "correct": true,
       "error": null,
       "item_id": "gsm8k-test-14",
-      "latency_ms": 14681.392374999632,
+      "latency_ms": 14813.692526999148,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-16",
+      "latency_ms": 8320.846796999831,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-17",
+      "latency_ms": 17409.323662999668,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-19",
+      "latency_ms": 11407.266674999846,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-21",
+      "latency_ms": 5046.576564000134,
       "model": "math",
       "success": true
     },
@@ -133,12 +165,108 @@
       "correct": true,
       "error": null,
       "item_id": "gsm8k-test-15",
-      "latency_ms": 26660.745245000726,
+      "latency_ms": 27216.05301999989,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-23",
+      "latency_ms": 3093.525440999656,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-22",
+      "latency_ms": 6018.114922000677,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-20",
+      "latency_ms": 13263.05476700145,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-18",
+      "latency_ms": 27291.28175799997,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-24",
+      "latency_ms": 6224.127113000577,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-28",
+      "latency_ms": 2608.9138589995855,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-29",
+      "latency_ms": 5521.368669998992,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-27",
+      "latency_ms": 12509.490718999587,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-25",
+      "latency_ms": 20000.520964000316,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-26",
+      "latency_ms": 19323.657210999954,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": true,
+      "error": null,
+      "item_id": "gsm8k-test-31",
+      "latency_ms": 7473.578492001252,
+      "model": "math",
+      "success": true
+    },
+    {
+      "correct": false,
+      "error": null,
+      "item_id": "gsm8k-test-30",
+      "latency_ms": 26748.209371000485,
       "model": "math",
       "success": true
     }
   ],
-  "request_count": 16,
-  "success_count": 16,
-  "throughput_requests_per_second": 0.2388354543112285
+  "request_count": 32,
+  "success_count": 32,
+  "throughput_requests_per_second": 0.2862891739173023
 }
