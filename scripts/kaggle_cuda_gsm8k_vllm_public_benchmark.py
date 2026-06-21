@@ -57,7 +57,18 @@ def create_venv(force: bool = False) -> None:
     if force and VENV_DIR.exists():
         shutil.rmtree(VENV_DIR)
     print(f"Creating isolated virtualenv at {VENV_DIR}")
-    venv.EnvBuilder(with_pip=True, clear=True, symlinks=True).create(VENV_DIR)
+    try:
+        venv.EnvBuilder(with_pip=True, clear=True, symlinks=True).create(VENV_DIR)
+        return
+    except subprocess.CalledProcessError as exc:
+        print(f"venv ensurepip failed: {exc}; retrying with get-pip.py bootstrap")
+        if VENV_DIR.exists():
+            shutil.rmtree(VENV_DIR)
+
+    venv.EnvBuilder(with_pip=False, clear=True, symlinks=True).create(VENV_DIR)
+    get_pip = ROOT / ".kaggle-gsm8k-get-pip.py"
+    urllib.request.urlretrieve("https://bootstrap.pypa.io/get-pip.py", get_pip)
+    run([str(venv_python()), str(get_pip)], timeout=300)
 
 
 def ensure_venv() -> None:
@@ -66,6 +77,12 @@ def ensure_venv() -> None:
     if not venv_python().exists():
         create_venv()
     py = venv_python()
+    try:
+        run([str(py), "-m", "pip", "--version"], timeout=60)
+    except subprocess.CalledProcessError:
+        print("Virtualenv exists but pip is unavailable; recreating it with fallback bootstrap")
+        create_venv(force=True)
+        py = venv_python()
     run([str(py), "-m", "pip", "install", "--upgrade", "pip", "wheel", "setuptools<80"], timeout=300)
     run([str(py), "-m", "pip", "install", "-q", "wrapt"], timeout=300)
     run([str(py), "-m", "pip", "install", "-q", "-e", ".[dev]"], timeout=600)
