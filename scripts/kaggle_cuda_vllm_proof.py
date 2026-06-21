@@ -136,7 +136,7 @@ def ensure_isolated_venv() -> None:
         create_venv_with_pip_fallback(force=True)
 
     print("Installing proof dependencies into isolated virtualenv")
-    run([str(py), "-m", "pip", "install", "--upgrade", "pip", "wheel", "setuptools<81"], timeout=300)
+    run([str(py), "-m", "pip", "install", "--upgrade", "pip", "wheel", "setuptools<80"], timeout=300)
     # Some hosted notebook images expose CUDA/Python packages whose optional
     # imports assume wrapt is present, while fresh isolated venvs do not include
     # it. Install it explicitly so vLLM/torch-adjacent import paths do not fail
