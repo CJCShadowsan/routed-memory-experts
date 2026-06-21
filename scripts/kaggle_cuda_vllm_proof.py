@@ -29,6 +29,7 @@ VENV_DIR = ROOT / ".kaggle-venv"
 IN_VENV_ENV = "RME_KAGGLE_PROOF_IN_VENV"
 PYTHON_ENV_VARS_TO_DROP = ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE")
 CUDA_LINK_DIR = ROOT / ".cuda-link"
+VLLM_LOG = ROOT / "runs" / "kaggle-vllm-startup.log"
 
 
 def venv_python() -> Path:
@@ -173,10 +174,22 @@ def create_venv_with_pip_fallback(force: bool = False) -> None:
     run([str(venv_python()), str(get_pip)], timeout=300)
 
 
-def wait_for_health(timeout_s: int = 300) -> None:
+def tail_file(path: Path, max_chars: int = 20000) -> str:
+    if not path.exists():
+        return ""
+    data = path.read_text(encoding="utf-8", errors="replace")
+    return data[-max_chars:]
+
+
+def wait_for_health(server: subprocess.Popen, log_path: Path, timeout_s: int = 300) -> None:
     start = time.time()
     last_error = None
     while time.time() - start < timeout_s:
+        if server.poll() is not None:
+            raise RuntimeError(
+                f"vLLM exited before health check passed with code {server.returncode}. "
+                f"Startup log tail:\n{tail_file(log_path)}"
+            )
         try:
             with urllib.request.urlopen(f"{BASE_URL}/health", timeout=5) as response:
                 if response.status == 200:
@@ -185,7 +198,40 @@ def wait_for_health(timeout_s: int = 300) -> None:
         except Exception as exc:  # noqa: BLE001 - diagnostic script
             last_error = exc
         time.sleep(5)
-    raise RuntimeError(f"vLLM did not become healthy within {timeout_s}s; last error={last_error!r}")
+    raise RuntimeError(
+        f"vLLM did not become healthy within {timeout_s}s; last error={last_error!r}. "
+        f"Startup log tail:\n{tail_file(log_path)}"
+    )
+
+
+def start_vllm_server(server_cmd: list[str], env_overrides: dict[str, str], label: str) -> tuple[subprocess.Popen, object, Path]:
+    VLLM_LOG.parent.mkdir(exist_ok=True)
+    log_path = VLLM_LOG.with_name(f"kaggle-vllm-startup-{label}.log")
+    env = sanitized_env()
+    env.update(env_overrides)
+    print(f"Starting CUDA vLLM server attempt '{label}' with overrides: {env_overrides}")
+    log_handle = log_path.open("w", encoding="utf-8")
+    server = subprocess.Popen(
+        server_cmd,
+        cwd=ROOT,
+        stdout=log_handle,
+        stderr=subprocess.STDOUT,
+        text=True,
+        env=env,
+    )
+    return server, log_handle, log_path
+
+
+def stop_vllm_server(server: subprocess.Popen, log_handle: object | None) -> None:
+    if server.poll() is None:
+        server.send_signal(signal.SIGTERM)
+        try:
+            server.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            server.kill()
+            server.wait(timeout=30)
+    if log_handle is not None:
+        log_handle.close()
 
 
 def save_models() -> None:
@@ -229,17 +275,35 @@ def main() -> int:
         "tldr=phh/Qwen3-0.6B-TLDR-Lora",
         "pts=codelion/Qwen3-0.6B-PTS-DPO-LoRA",
     ]
-    print("Starting CUDA vLLM server with max_cpu_loras > max_loras...")
-    server = subprocess.Popen(
-        server_cmd,
-        cwd=ROOT,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        env=sanitized_env(),
-    )
+    attempts = [
+        ("default", {}),
+        # Hosted T4 notebooks can fail inside FlashInfer/JIT startup. TORCH_SDPA
+        # is slower but avoids that path and is sufficient for the proof.
+        ("torch-sdpa", {"VLLM_ATTENTION_BACKEND": "TORCH_SDPA"}),
+        # Final fallback: vLLM's legacy engine sometimes avoids V1 startup issues.
+        ("legacy-xformers", {"VLLM_USE_V1": "0", "VLLM_ATTENTION_BACKEND": "XFORMERS"}),
+    ]
+    server = None
+    log_handle = None
+    log_path = None
+    startup_errors = []
+    for label, overrides in attempts:
+        server, log_handle, log_path = start_vllm_server(server_cmd, overrides, label)
+        try:
+            wait_for_health(server, log_path)
+            print(f"vLLM startup attempt '{label}' succeeded; log: {log_path}")
+            break
+        except RuntimeError as exc:
+            startup_errors.append(f"[{label}] {exc}")
+            print(f"vLLM startup attempt '{label}' failed; retrying if possible")
+            stop_vllm_server(server, log_handle)
+            server = None
+            log_handle = None
+            log_path = None
+    else:
+        raise RuntimeError("All vLLM startup attempts failed:\n" + "\n\n".join(startup_errors))
+
     try:
-        wait_for_health()
         save_models()
         commands = [
             ["rme", "prove-openai", "--base-url", V1_URL, "--model", "tldr", "--workload", "workloads/real_world_v1.jsonl", "--experts", "experts", "--output", "runs/cuda-vllm-tldr-proof.json", "--limit", "6", "--min-accuracy", "0.75"],
@@ -254,15 +318,11 @@ def main() -> int:
         return 0
     finally:
         print("Stopping vLLM server...")
-        server.send_signal(signal.SIGTERM)
-        try:
-            server.wait(timeout=30)
-        except subprocess.TimeoutExpired:
-            server.kill()
-        if server.stdout:
-            tail = server.stdout.read()[-4000:]
-            print("--- vLLM server output tail ---")
-            print(tail)
+        if server is not None:
+            stop_vllm_server(server, log_handle)
+        if log_path is not None:
+            print(f"--- vLLM server output tail ({log_path}) ---")
+            print(tail_file(log_path))
 
 
 if __name__ == "__main__":
