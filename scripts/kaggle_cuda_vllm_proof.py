@@ -30,6 +30,7 @@ IN_VENV_ENV = "RME_KAGGLE_PROOF_IN_VENV"
 PYTHON_ENV_VARS_TO_DROP = ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE")
 CUDA_LINK_DIR = ROOT / ".cuda-link"
 VLLM_LOG = ROOT / "runs" / "kaggle-vllm-startup.log"
+VLLM_PACKAGE = "vllm==0.10.2"
 
 
 def venv_python() -> Path:
@@ -141,7 +142,12 @@ def ensure_isolated_venv() -> None:
     # with `ModuleNotFoundError: No module named 'wrapt'`.
     run([str(py), "-m", "pip", "install", "-q", "wrapt"], timeout=300)
     run([str(py), "-m", "pip", "install", "-q", "-e", ".[dev]"], timeout=600)
-    run([str(py), "-m", "pip", "install", "-q", "vllm"], timeout=1200)
+    # Pin below the current latest vLLM line. On Kaggle T4, latest vLLM can
+    # accept `--max-cpu-loras > --max-loras` and pass health checks, but still
+    # route every backend attempt through vLLM V1 FlashInfer and crash on the
+    # first LoRA prefill with `BatchPrefillWithPagedKVCache ... invalid
+    # argument`. vLLM 0.10.2 still has the V0 fallback needed for this proof.
+    run([str(py), "-m", "pip", "install", "-q", VLLM_PACKAGE], timeout=1200)
 
     env = sanitized_env()
     env[IN_VENV_ENV] = "1"
@@ -264,6 +270,7 @@ def main() -> int:
     ensure_isolated_venv()
     print("Python:", sys.version)
     print("Python executable:", sys.executable)
+    run([sys.executable, "-m", "pip", "show", "vllm"], timeout=60)
     run([sys.executable, "-m", "pytest", "-q"])
     run(["nvidia-smi"], check=False, timeout=60)
     configure_cuda_linker_env()
@@ -299,13 +306,15 @@ def main() -> int:
         "pts=codelion/Qwen3-0.6B-PTS-DPO-LoRA",
     ]
     attempts = [
-        # Prefer a non-FlashInfer backend on Kaggle T4. The default backend can
-        # start successfully and then crash on the first LoRA request with
+        # Prefer vLLM V0 + non-FlashInfer backends on Kaggle T4. Some vLLM V1
+        # builds ignore XFORMERS/TORCH_SDPA for this Qwen3 LoRA path and still
+        # execute `vllm/v1/attention/backends/flashinfer.py`, which crashes with
         # `BatchPrefillWithPagedKVCache failed with error invalid argument`.
+        ("v0-xformers", {"VLLM_USE_V1": "0", "VLLM_ATTENTION_BACKEND": "XFORMERS", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
+        ("v0-torch-sdpa", {"VLLM_USE_V1": "0", "VLLM_ATTENTION_BACKEND": "TORCH_SDPA", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
         ("xformers", {"VLLM_ATTENTION_BACKEND": "XFORMERS", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
         ("torch-sdpa", {"VLLM_ATTENTION_BACKEND": "TORCH_SDPA", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
         ("default", {"PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
-        ("legacy-xformers", {"VLLM_USE_V1": "0", "VLLM_ATTENTION_BACKEND": "XFORMERS", "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}),
     ]
     attempt_errors = []
     for label, overrides in attempts:
